@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { ChevronDown, ChevronUp, Edit2, Trash2, Merge } from "lucide-react";
+import { ChevronDown, ChevronUp, Edit2, Trash2, Merge, Bot } from "lucide-react";
 import { Theme } from "@/data/dummyCodeframe";
 import {
   AlertDialog,
@@ -118,8 +118,20 @@ export const ThemeCard = ({ theme, onRename, onDelete, onMerge, onResponseClick 
       </CardHeader>
 
       {expanded && (
-        <CardContent className="pt-0 space-y-2">
-          {theme.responses.map((response) => (
+        <CardContent className="pt-0 space-y-3">
+          <div className="p-4 rounded-lg bg-primary/10 border border-primary/20">
+            <h4 className="text-sm font-semibold text-primary mb-2 flex items-center gap-2">
+              <Bot className="h-4 w-4" />
+              LLM Reasoning
+            </h4>
+            <p className="text-sm text-muted-foreground leading-relaxed">
+              {theme.reasoning}
+            </p>
+          </div>
+
+          <div className="space-y-2">
+            <h4 className="text-sm font-semibold text-foreground">Responses ({theme.responses.length})</h4>
+            {theme.responses.map((response) => (
             <div
               key={response.id}
               className="p-3 rounded-md bg-muted/50 hover:bg-muted cursor-pointer transition-colors border border-border/30"
@@ -130,7 +142,8 @@ export const ThemeCard = ({ theme, onRename, onDelete, onMerge, onResponseClick 
                 {response.code}
               </Badge>
             </div>
-          ))}
+            ))}
+          </div>
         </CardContent>
       )}
     </Card>
