@@ -120,9 +120,8 @@ export const ThemeCard = ({ theme, onRename, onDelete, onMerge, onResponseClick 
       {expanded && (
         <CardContent className="pt-0 space-y-3">
           <div className="p-4 rounded-lg bg-primary/10 border border-primary/20">
-            <h4 className="text-sm font-semibold text-primary mb-2 flex items-center gap-2">
-              <Bot className="h-4 w-4" />
-              LLM Reasoning
+            <h4 className="text-sm font-semibold text-primary mb-2">
+              Why this theme name?
             </h4>
             <p className="text-sm text-muted-foreground leading-relaxed">
               {theme.reasoning}
