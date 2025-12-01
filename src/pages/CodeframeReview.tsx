@@ -59,6 +59,19 @@ export default function CodeframeReview() {
     setSelectedResponse({ id: responseId, text: responseText });
   };
 
+  const handleCodeChange = (responseId: string, newCode: string) => {
+    setThemes(themes.map(theme => ({
+      ...theme,
+      responses: theme.responses.map(response =>
+        response.id === responseId ? { ...response, code: newCode } : response
+      ),
+    })));
+    toast({
+      title: "Code Updated",
+      description: "Response code has been updated successfully.",
+    });
+  };
+
   return (
     <div className="min-h-screen bg-background">
       {/* Top Panel */}
@@ -132,6 +145,7 @@ export default function CodeframeReview() {
                   onDelete={handleDelete}
                   onMerge={handleMerge}
                   onResponseClick={handleResponseClick}
+                  onCodeChange={handleCodeChange}
                 />
               ))}
             </ScrollArea>
