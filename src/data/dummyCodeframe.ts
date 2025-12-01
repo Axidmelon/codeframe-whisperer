@@ -60,13 +60,14 @@ export const questionLevelData: Question[] = [
       {
         id: "t6",
         name: "Brand",
-        description: "Responses emphasizing brand importance and recognition",
-        reasoning: "The theme 'Brand' was identified because these responses explicitly focus on brand identity and market recognition as the primary decision factor. Unlike 'Cola Preference' which focuses on product type, or 'Brand Loyalty' in Q2 which explores trust, this theme captures responses where the brand itself - its market presence, advertising impact, and cultural status - is the central topic. Phrases like 'big brands', 'advertising', and 'popular brands' indicate that brand awareness and market positioning drive these consumers' choices. This theme was separated from product-specific preferences to highlight the meta-level consideration of brand equity in purchase decisions.",
+        description: "Responses mentioning specific soft drink brand names",
+        reasoning: "The theme 'Brand' was created to cluster responses that explicitly mention specific soft drink brand names as their primary focus. This theme emerged from analyzing responses where consumers directly name brands like Sprite, Mountain Dew, Fanta, Dr Pepper, and 7UP. The reasoning differs from product-type themes (cola vs non-cola) because it centers on brand recall and explicit brand mention rather than flavor category. The clustering reveals that some consumers organize their preferences around specific brand identities rather than product attributes. This pattern is significant for understanding brand salience and top-of-mind awareness in the soft drink category.",
         responses: [
-          { id: "r17", text: "I trust big brands like Coca-Cola", code: "BRAND_TRUST_BIG" },
-          { id: "r18", text: "Brand matters more than taste", code: "BRAND_PRIORITY" },
-          { id: "r19", text: "I buy whatever brand has good advertising", code: "BRAND_ADVERTISING" },
-          { id: "r20", text: "Popular brands are popular for a reason", code: "BRAND_POPULARITY" },
+          { id: "r17", text: "Sprite is my favorite", code: "BRAND_SPRITE" },
+          { id: "r18", text: "Mountain Dew for the energy", code: "BRAND_MDEW" },
+          { id: "r19", text: "I like Fanta orange", code: "BRAND_FANTA" },
+          { id: "r20", text: "Dr Pepper has a unique taste", code: "BRAND_DRPEPPER" },
+          { id: "r21", text: "7UP is so refreshing", code: "BRAND_7UP" },
         ],
       },
     ],
@@ -104,7 +105,7 @@ export const questionLevelData: Question[] = [
 export const overallCodeframe = {
   totalQuestions: 2,
   totalThemes: 6,
-  totalResponses: 20,
+  totalResponses: 21,
   allThemes: [
     ...questionLevelData[0].themes,
     ...questionLevelData[1].themes,
