@@ -57,6 +57,18 @@ export const questionLevelData: Question[] = [
           { id: "r10", text: "I switched to sparkling water", code: "HEALTH_ALTERNATIVE" },
         ],
       },
+      {
+        id: "t6",
+        name: "Brand",
+        description: "Responses emphasizing brand importance and recognition",
+        reasoning: "The theme 'Brand' was identified because these responses explicitly focus on brand identity and market recognition as the primary decision factor. Unlike 'Cola Preference' which focuses on product type, or 'Brand Loyalty' in Q2 which explores trust, this theme captures responses where the brand itself - its market presence, advertising impact, and cultural status - is the central topic. Phrases like 'big brands', 'advertising', and 'popular brands' indicate that brand awareness and market positioning drive these consumers' choices. This theme was separated from product-specific preferences to highlight the meta-level consideration of brand equity in purchase decisions.",
+        responses: [
+          { id: "r17", text: "I trust big brands like Coca-Cola", code: "BRAND_TRUST_BIG" },
+          { id: "r18", text: "Brand matters more than taste", code: "BRAND_PRIORITY" },
+          { id: "r19", text: "I buy whatever brand has good advertising", code: "BRAND_ADVERTISING" },
+          { id: "r20", text: "Popular brands are popular for a reason", code: "BRAND_POPULARITY" },
+        ],
+      },
     ],
   },
   {
@@ -91,8 +103,8 @@ export const questionLevelData: Question[] = [
 
 export const overallCodeframe = {
   totalQuestions: 2,
-  totalThemes: 5,
-  totalResponses: 16,
+  totalThemes: 6,
+  totalResponses: 20,
   allThemes: [
     ...questionLevelData[0].themes,
     ...questionLevelData[1].themes,
