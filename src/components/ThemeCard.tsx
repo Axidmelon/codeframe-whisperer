@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { ChevronDown, ChevronUp, Edit2, Trash2, Merge, Bot } from "lucide-react";
+import { ChevronDown, ChevronUp, MoreVertical, Pencil, Merge, Trash2 } from "lucide-react";
 import { Theme } from "@/data/dummyCodeframe";
 import {
   AlertDialog,
@@ -13,8 +13,14 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
@@ -24,16 +30,32 @@ interface ThemeCardProps {
   onDelete: (themeId: string) => void;
   onMerge: (themeId: string) => void;
   onResponseClick: (responseId: string, responseText: string) => void;
+  onCodeChange: (responseId: string, newCode: string) => void;
 }
 
-export const ThemeCard = ({ theme, onRename, onDelete, onMerge, onResponseClick }: ThemeCardProps) => {
+export const ThemeCard = ({ theme, onRename, onDelete, onMerge, onResponseClick, onCodeChange }: ThemeCardProps) => {
   const [expanded, setExpanded] = useState(false);
   const [editName, setEditName] = useState(theme.name);
   const [isEditOpen, setIsEditOpen] = useState(false);
+  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+  const [editingCodeId, setEditingCodeId] = useState<string | null>(null);
+  const [editCode, setEditCode] = useState("");
 
   const handleRename = () => {
     onRename(theme.id, editName);
     setIsEditOpen(false);
+  };
+
+  const handleCodeEdit = (responseId: string, currentCode: string) => {
+    setEditingCodeId(responseId);
+    setEditCode(currentCode);
+  };
+
+  const handleCodeSave = () => {
+    if (editingCodeId) {
+      onCodeChange(editingCodeId, editCode);
+      setEditingCodeId(null);
+    }
   };
 
   return (
@@ -50,60 +72,28 @@ export const ThemeCard = ({ theme, onRename, onDelete, onMerge, onResponseClick 
             <CardDescription className="text-sm mt-1">{theme.description}</CardDescription>
           </div>
           <div className="flex gap-1 ml-2">
-            <AlertDialog open={isEditOpen} onOpenChange={setIsEditOpen}>
-              <AlertDialogTrigger asChild>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
                 <Button variant="ghost" size="icon" className="h-8 w-8">
-                  <Edit2 className="h-4 w-4" />
+                  <MoreVertical className="h-4 w-4" />
                 </Button>
-              </AlertDialogTrigger>
-              <AlertDialogContent>
-                <AlertDialogHeader>
-                  <AlertDialogTitle>Rename Theme</AlertDialogTitle>
-                  <AlertDialogDescription>
-                    Update the theme name below.
-                  </AlertDialogDescription>
-                </AlertDialogHeader>
-                <div className="py-4">
-                  <Label htmlFor="theme-name">Theme Name</Label>
-                  <Input
-                    id="theme-name"
-                    value={editName}
-                    onChange={(e) => setEditName(e.target.value)}
-                    className="mt-2"
-                  />
-                </div>
-                <AlertDialogFooter>
-                  <AlertDialogCancel>Cancel</AlertDialogCancel>
-                  <AlertDialogAction onClick={handleRename}>Save</AlertDialogAction>
-                </AlertDialogFooter>
-              </AlertDialogContent>
-            </AlertDialog>
-
-            <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => onMerge(theme.id)}>
-              <Merge className="h-4 w-4" />
-            </Button>
-
-            <AlertDialog>
-              <AlertDialogTrigger asChild>
-                <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive">
-                  <Trash2 className="h-4 w-4" />
-                </Button>
-              </AlertDialogTrigger>
-              <AlertDialogContent>
-                <AlertDialogHeader>
-                  <AlertDialogTitle>Delete Theme</AlertDialogTitle>
-                  <AlertDialogDescription>
-                    Are you sure you want to delete "{theme.name}"? This will remove all associated responses.
-                  </AlertDialogDescription>
-                </AlertDialogHeader>
-                <AlertDialogFooter>
-                  <AlertDialogCancel>Cancel</AlertDialogCancel>
-                  <AlertDialogAction onClick={() => onDelete(theme.id)} className="bg-destructive text-destructive-foreground">
-                    Delete
-                  </AlertDialogAction>
-                </AlertDialogFooter>
-              </AlertDialogContent>
-            </AlertDialog>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem onClick={() => setIsEditOpen(true)}>
+                  <Pencil className="h-4 w-4 mr-2" />
+                  Rename
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => onMerge(theme.id)}>
+                  <Merge className="h-4 w-4 mr-2" />
+                  Merge
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={() => setIsDeleteOpen(true)} className="text-destructive">
+                  <Trash2 className="h-4 w-4 mr-2" />
+                  Delete
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
 
             <Button
               variant="ghost"
@@ -115,6 +105,75 @@ export const ThemeCard = ({ theme, onRename, onDelete, onMerge, onResponseClick 
             </Button>
           </div>
         </div>
+
+        {/* Rename Dialog */}
+        <AlertDialog open={isEditOpen} onOpenChange={setIsEditOpen}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Rename Theme</AlertDialogTitle>
+              <AlertDialogDescription>
+                Update the theme name below.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <div className="py-4">
+              <Label htmlFor="theme-name">Theme Name</Label>
+              <Input
+                id="theme-name"
+                value={editName}
+                onChange={(e) => setEditName(e.target.value)}
+                className="mt-2"
+              />
+            </div>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogAction onClick={handleRename}>Save</AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+
+        {/* Delete Dialog */}
+        <AlertDialog open={isDeleteOpen} onOpenChange={setIsDeleteOpen}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Delete Theme</AlertDialogTitle>
+              <AlertDialogDescription>
+                Are you sure you want to delete "{theme.name}"? This will remove all associated responses.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogAction onClick={() => onDelete(theme.id)} className="bg-destructive text-destructive-foreground">
+                Delete
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+
+        {/* Code Edit Dialog */}
+        <AlertDialog open={editingCodeId !== null} onOpenChange={(open) => !open && setEditingCodeId(null)}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Edit Response Code</AlertDialogTitle>
+              <AlertDialogDescription>
+                Update or remove the code for this response.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <div className="py-4">
+              <Label htmlFor="response-code">Code</Label>
+              <Input
+                id="response-code"
+                value={editCode}
+                onChange={(e) => setEditCode(e.target.value)}
+                className="mt-2"
+                placeholder="Enter code (e.g., Q1_1)"
+              />
+            </div>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogAction onClick={handleCodeSave}>Save Code</AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </CardHeader>
 
       {expanded && (
@@ -137,7 +196,14 @@ export const ThemeCard = ({ theme, onRename, onDelete, onMerge, onResponseClick 
               onClick={() => onResponseClick(response.id, response.text)}
             >
               <p className="text-sm mb-1">{response.text}</p>
-              <Badge variant="outline" className="text-xs">
+              <Badge 
+                variant="outline" 
+                className="text-xs cursor-pointer hover:bg-accent"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleCodeEdit(response.id, response.code);
+                }}
+              >
                 {response.code}
               </Badge>
             </div>
