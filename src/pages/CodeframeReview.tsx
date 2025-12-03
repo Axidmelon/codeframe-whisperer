@@ -15,6 +15,7 @@ export default function CodeframeReview() {
   const [themes, setThemes] = useState<Theme[]>(questionLevelData[0].themes);
   const [selectedTheme, setSelectedTheme] = useState<Theme | null>(null);
   const [selectedResponse, setSelectedResponse] = useState<{ id: string; text: string }>();
+  const [isChatCollapsed, setIsChatCollapsed] = useState(true);
   const { toast } = useToast();
 
   const handleViewChange = (newView: "question" | "overall") => {
@@ -140,7 +141,7 @@ export default function CodeframeReview() {
 
       {/* Main Content */}
       <div className="container mx-auto px-4 py-6">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 h-[calc(100vh-200px)]">
+        <div className={`grid grid-cols-1 gap-6 h-[calc(100vh-200px)] ${isChatCollapsed ? 'lg:grid-cols-[1fr_1fr_auto]' : 'lg:grid-cols-3'}`}>
           {/* Left Panel - Themes */}
           <div className="border border-border/50 rounded-lg bg-card/30 p-4">
             <h2 className="text-lg font-semibold mb-4">Themes ({themes.length})</h2>
@@ -170,8 +171,12 @@ export default function CodeframeReview() {
           </div>
 
           {/* Right Panel - Chat */}
-          <div className="h-full">
-            <ChatPanel selectedResponse={selectedResponse} />
+          <div className={`h-full ${isChatCollapsed ? 'w-16' : ''}`}>
+            <ChatPanel 
+              selectedResponse={selectedResponse} 
+              isCollapsed={isChatCollapsed}
+              onToggleCollapse={() => setIsChatCollapsed(!isChatCollapsed)}
+            />
           </div>
         </div>
       </div>
