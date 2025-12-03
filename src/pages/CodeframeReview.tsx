@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { ThemeCard } from "@/components/ThemeCard";
+import { ResponsesPanel } from "@/components/ResponsesPanel";
 import { ChatPanel } from "@/components/ChatPanel";
 import { questionLevelData, overallCodeframe, Theme } from "@/data/dummyCodeframe";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -12,11 +13,13 @@ export default function CodeframeReview() {
   const [view, setView] = useState<"question" | "overall">("question");
   const [selectedQuestion, setSelectedQuestion] = useState(0);
   const [themes, setThemes] = useState<Theme[]>(questionLevelData[0].themes);
+  const [selectedTheme, setSelectedTheme] = useState<Theme | null>(null);
   const [selectedResponse, setSelectedResponse] = useState<{ id: string; text: string }>();
   const { toast } = useToast();
 
   const handleViewChange = (newView: "question" | "overall") => {
     setView(newView);
+    setSelectedTheme(null);
     if (newView === "overall") {
       setThemes(overallCodeframe.allThemes);
     } else {
@@ -26,7 +29,12 @@ export default function CodeframeReview() {
 
   const handleQuestionChange = (index: number) => {
     setSelectedQuestion(index);
+    setSelectedTheme(null);
     setThemes(questionLevelData[index].themes);
+  };
+
+  const handleThemeSelect = (theme: Theme) => {
+    setSelectedTheme(selectedTheme?.id === theme.id ? null : theme);
   };
 
   const handleRename = (themeId: string, newName: string) => {
@@ -132,7 +140,7 @@ export default function CodeframeReview() {
 
       {/* Main Content */}
       <div className="container mx-auto px-4 py-6">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 h-[calc(100vh-200px)]">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 h-[calc(100vh-200px)]">
           {/* Left Panel - Themes */}
           <div className="border border-border/50 rounded-lg bg-card/30 p-4">
             <h2 className="text-lg font-semibold mb-4">Themes ({themes.length})</h2>
@@ -141,6 +149,8 @@ export default function CodeframeReview() {
                 <ThemeCard
                   key={theme.id}
                   theme={theme}
+                  isSelected={selectedTheme?.id === theme.id}
+                  onSelect={() => handleThemeSelect(theme)}
                   onRename={handleRename}
                   onDelete={handleDelete}
                   onMerge={handleMerge}
@@ -149,6 +159,14 @@ export default function CodeframeReview() {
                 />
               ))}
             </ScrollArea>
+          </div>
+
+          {/* Middle Panel - Responses */}
+          <div className="h-full">
+            <ResponsesPanel
+              selectedTheme={selectedTheme}
+              onResponseClick={handleResponseClick}
+            />
           </div>
 
           {/* Right Panel - Chat */}
