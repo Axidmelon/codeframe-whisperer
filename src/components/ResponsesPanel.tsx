@@ -52,12 +52,12 @@ export function ResponsesPanel({ selectedTheme, onResponseClick }: ResponsesPane
                 >
                   <p className="text-sm mb-2">{response.text}</p>
                   <div className="flex items-center gap-2">
-                    <Badge variant="outline" className="text-xs font-mono">
-                      {response.code}
-                    </Badge>
                     <Badge variant="outline" className={`text-xs flex items-center gap-1 ${sentiment.className}`}>
                       <SentimentIcon className="h-3 w-3" />
                       {sentiment.label}
+                    </Badge>
+                    <Badge variant="outline" className="text-xs font-mono">
+                      {response.code}
                     </Badge>
                   </div>
                 </div>
