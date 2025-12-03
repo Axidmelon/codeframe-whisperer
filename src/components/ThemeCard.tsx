@@ -182,7 +182,7 @@ export const ThemeCard = ({ theme, isSelected, onSelect, onRename, onDelete, onM
       </CardHeader>
 
       {expanded && (
-        <CardContent className="pt-0 space-y-3">
+        <CardContent className="pt-0">
           <div className="p-4 rounded-lg bg-primary/10 border border-primary/20">
             <h4 className="text-sm font-semibold text-primary mb-2">
               Why this theme name?
@@ -190,29 +190,6 @@ export const ThemeCard = ({ theme, isSelected, onSelect, onRename, onDelete, onM
             <p className="text-sm text-muted-foreground leading-relaxed">
               {theme.reasoning}
             </p>
-          </div>
-
-          <div className="space-y-2">
-            <h4 className="text-sm font-semibold text-foreground">Responses ({theme.responses.length})</h4>
-            {theme.responses.map((response) => (
-            <div
-              key={response.id}
-              className="p-3 rounded-md bg-muted/50 hover:bg-muted cursor-pointer transition-colors border border-border/30"
-              onClick={() => onResponseClick(response.id, response.text)}
-            >
-              <p className="text-sm mb-1">{response.text}</p>
-              <Badge 
-                variant="outline" 
-                className="text-xs cursor-pointer hover:bg-accent"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleCodeEdit(response.id, response.code);
-                }}
-              >
-                {response.code}
-              </Badge>
-            </div>
-            ))}
           </div>
         </CardContent>
       )}
