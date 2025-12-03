@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Send, Bot, User } from "lucide-react";
+import { Send, Bot, User, PanelRightClose, PanelRightOpen } from "lucide-react";
 
 interface Message {
   id: string;
@@ -16,6 +16,7 @@ interface ChatPanelProps {
 }
 
 export const ChatPanel = ({ selectedResponse }: ChatPanelProps) => {
+  const [isCollapsed, setIsCollapsed] = useState(true);
   const [messages, setMessages] = useState<Message[]>([
     {
       id: "1",
@@ -63,13 +64,39 @@ export const ChatPanel = ({ selectedResponse }: ChatPanelProps) => {
     return responses[Math.floor(Math.random() * responses.length)];
   };
 
+  if (isCollapsed) {
+    return (
+      <div className="h-full flex flex-col items-center pt-4">
+        <Button
+          variant="outline"
+          size="icon"
+          onClick={() => setIsCollapsed(false)}
+          className="h-10 w-10"
+        >
+          <PanelRightOpen className="h-5 w-5" />
+        </Button>
+        <span className="text-xs text-muted-foreground mt-2 writing-mode-vertical">AI Assistant</span>
+      </div>
+    );
+  }
+
   return (
     <Card className="h-full flex flex-col border-border/50">
       <CardHeader className="border-b border-border/50 pb-4">
-        <CardTitle className="flex items-center gap-2">
-          <Bot className="h-5 w-5 text-primary" />
-          AI Assistant
-        </CardTitle>
+        <div className="flex items-center justify-between">
+          <CardTitle className="flex items-center gap-2">
+            <Bot className="h-5 w-5 text-primary" />
+            AI Assistant
+          </CardTitle>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => setIsCollapsed(true)}
+            className="h-8 w-8"
+          >
+            <PanelRightClose className="h-4 w-4" />
+          </Button>
+        </div>
         {selectedResponse && (
           <p className="text-xs text-muted-foreground mt-2 line-clamp-2">
             Discussing: "{selectedResponse.text}"
