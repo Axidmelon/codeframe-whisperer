@@ -26,6 +26,8 @@ import { Label } from "@/components/ui/label";
 
 interface ThemeCardProps {
   theme: Theme;
+  isSelected?: boolean;
+  onSelect?: () => void;
   onRename: (themeId: string, newName: string) => void;
   onDelete: (themeId: string) => void;
   onMerge: (themeId: string) => void;
@@ -33,7 +35,7 @@ interface ThemeCardProps {
   onCodeChange: (responseId: string, newCode: string) => void;
 }
 
-export const ThemeCard = ({ theme, onRename, onDelete, onMerge, onResponseClick, onCodeChange }: ThemeCardProps) => {
+export const ThemeCard = ({ theme, isSelected, onSelect, onRename, onDelete, onMerge, onResponseClick, onCodeChange }: ThemeCardProps) => {
   const [expanded, setExpanded] = useState(false);
   const [editName, setEditName] = useState(theme.name);
   const [isEditOpen, setIsEditOpen] = useState(false);
@@ -59,7 +61,10 @@ export const ThemeCard = ({ theme, onRename, onDelete, onMerge, onResponseClick,
   };
 
   return (
-    <Card className="mb-3 border-border/50 hover:border-primary/50 transition-all">
+    <Card 
+      className={`mb-3 border-border/50 hover:border-primary/50 transition-all cursor-pointer ${isSelected ? 'border-primary ring-1 ring-primary' : ''}`}
+      onClick={onSelect}
+    >
       <CardHeader className="pb-3">
         <div className="flex items-start justify-between">
           <div className="flex-1">
@@ -71,7 +76,7 @@ export const ThemeCard = ({ theme, onRename, onDelete, onMerge, onResponseClick,
             </CardTitle>
             <CardDescription className="text-sm mt-1">{theme.description}</CardDescription>
           </div>
-          <div className="flex gap-1 ml-2">
+          <div className="flex gap-1 ml-2" onClick={(e) => e.stopPropagation()}>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" size="icon" className="h-8 w-8">
