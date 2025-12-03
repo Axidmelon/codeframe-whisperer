@@ -4,6 +4,7 @@ import { ResponsesPanel } from "@/components/ResponsesPanel";
 import { ChatPanel } from "@/components/ChatPanel";
 import { questionLevelData, overallCodeframe, Theme } from "@/data/dummyCodeframe";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
 import { Download, FileText } from "lucide-react";
@@ -108,26 +109,25 @@ export default function CodeframeReview() {
           </div>
 
           {view === "question" && (
-            <div className="flex gap-2 mt-4">
-              {questionLevelData.map((q, idx) => (
-                <Button
-                  key={q.id}
-                  variant={selectedQuestion === idx ? "default" : "outline"}
-                  size="sm"
-                  onClick={() => handleQuestionChange(idx)}
-                  className="text-sm"
-                >
-                  Q{idx + 1}
-                </Button>
-              ))}
+            <div className="mt-4">
+              <Select
+                value={selectedQuestion.toString()}
+                onValueChange={(value) => handleQuestionChange(parseInt(value))}
+              >
+                <SelectTrigger className="w-[400px] bg-background">
+                  <SelectValue placeholder="Select a question" />
+                </SelectTrigger>
+                <SelectContent className="bg-background">
+                  {questionLevelData.map((q, idx) => (
+                    <SelectItem key={q.id} value={idx.toString()}>
+                      Q{idx + 1}: {q.text}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
           )}
 
-          {view === "question" && (
-            <p className="text-sm text-muted-foreground mt-3">
-              {questionLevelData[selectedQuestion].text}
-            </p>
-          )}
 
           {view === "overall" && (
             <div className="flex gap-6 mt-3 text-sm text-muted-foreground">
