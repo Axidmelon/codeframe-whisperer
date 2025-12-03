@@ -13,10 +13,11 @@ interface Message {
 
 interface ChatPanelProps {
   selectedResponse?: { id: string; text: string };
+  isCollapsed: boolean;
+  onToggleCollapse: () => void;
 }
 
-export const ChatPanel = ({ selectedResponse }: ChatPanelProps) => {
-  const [isCollapsed, setIsCollapsed] = useState(true);
+export const ChatPanel = ({ selectedResponse, isCollapsed, onToggleCollapse }: ChatPanelProps) => {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: "1",
@@ -66,16 +67,16 @@ export const ChatPanel = ({ selectedResponse }: ChatPanelProps) => {
 
   if (isCollapsed) {
     return (
-      <div className="h-full flex flex-col items-center pt-4">
+      <div className="h-full flex flex-col items-center pt-4 border border-border/50 rounded-lg bg-card/30">
         <Button
           variant="outline"
           size="icon"
-          onClick={() => setIsCollapsed(false)}
+          onClick={onToggleCollapse}
           className="h-10 w-10"
         >
           <PanelRightOpen className="h-5 w-5" />
         </Button>
-        <span className="text-xs text-muted-foreground mt-2 writing-mode-vertical">AI Assistant</span>
+        <span className="text-xs text-muted-foreground mt-2 [writing-mode:vertical-lr]">AI Assistant</span>
       </div>
     );
   }
@@ -91,7 +92,7 @@ export const ChatPanel = ({ selectedResponse }: ChatPanelProps) => {
           <Button
             variant="ghost"
             size="icon"
-            onClick={() => setIsCollapsed(true)}
+            onClick={onToggleCollapse}
             className="h-8 w-8"
           >
             <PanelRightClose className="h-4 w-4" />
