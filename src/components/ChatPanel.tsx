@@ -111,7 +111,7 @@ export const ChatPanel = ({
           </Button>
         </div>
       </div>
-      {selectedQuestion || selectedResponse}
+      
 
       <ScrollArea className="flex-1">
         <div className="p-4 space-y-4">
