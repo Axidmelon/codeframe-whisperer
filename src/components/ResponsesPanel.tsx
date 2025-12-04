@@ -10,8 +10,8 @@ interface ResponsesPanelProps {
 }
 
 const sentimentConfig: Record<Sentiment, { icon: typeof ThumbsUp; label: string; className: string }> = {
-  positive: { icon: ThumbsUp, label: "Positive", className: "text-green-500 bg-green-500/10 border-green-500/30" },
-  negative: { icon: ThumbsDown, label: "Negative", className: "text-red-500 bg-red-500/10 border-red-500/30" },
+  positive: { icon: ThumbsUp, label: "Positive", className: "text-emerald-700 bg-emerald-700/10 border-emerald-700/30" },
+  negative: { icon: ThumbsDown, label: "Negative", className: "text-red-600 bg-red-600/10 border-red-600/30" },
   neutral: { icon: Minus, label: "Neutral", className: "text-muted-foreground bg-muted/50 border-border" },
 };
 
