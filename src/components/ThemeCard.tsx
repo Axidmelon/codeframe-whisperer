@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { ChevronDown, ChevronUp, MoreVertical, Pencil, Merge, Trash2 } from "lucide-react";
+import { MoreVertical, Pencil, Merge, Trash2 } from "lucide-react";
 import { Theme } from "@/data/dummyCodeframe";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
@@ -28,7 +28,7 @@ export const ThemeCard = ({
   onResponseClick,
   onCodeChange
 }: ThemeCardProps) => {
-  const [expanded, setExpanded] = useState(false);
+  
   const [editName, setEditName] = useState(theme.name);
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
@@ -84,9 +84,6 @@ export const ThemeCard = ({
               </DropdownMenuContent>
             </DropdownMenu>
 
-            <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => setExpanded(!expanded)}>
-              {expanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
-            </Button>
           </div>
         </div>
 
@@ -149,8 +146,5 @@ export const ThemeCard = ({
         </AlertDialog>
       </CardHeader>
 
-      {expanded && <CardContent className="pt-0">
-          
-        </CardContent>}
     </Card>;
 };
