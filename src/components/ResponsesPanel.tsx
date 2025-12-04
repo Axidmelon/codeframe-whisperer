@@ -20,7 +20,7 @@ export function ResponsesPanel({ selectedTheme, onResponseClick }: ResponsesPane
     return (
       <Card className="h-full border-slate-200 bg-white shadow-sm overflow-hidden flex flex-col">
         <div className="flex items-center justify-between px-4 py-3 bg-slate-800 shrink-0">
-          <h2 className="text-sm font-medium text-white">Responses</h2>
+          <h2 className="text-sm font-medium text-white">Select a Theme</h2>
           <List className="h-4 w-4 text-slate-400" />
         </div>
         <div className="flex-1 flex items-center justify-center">
@@ -36,14 +36,13 @@ export function ResponsesPanel({ selectedTheme, onResponseClick }: ResponsesPane
   return (
     <Card className="h-full border-slate-200 bg-white shadow-sm overflow-hidden flex flex-col">
       <div className="flex items-center justify-between px-4 py-3 bg-slate-800 shrink-0">
-        <h2 className="text-sm font-medium text-white">Responses</h2>
+        <h2 className="text-sm font-medium text-white">{selectedTheme.name}</h2>
         <List className="h-4 w-4 text-slate-400" />
       </div>
       <div className="p-4 pb-2 border-b border-slate-200 shrink-0">
         <div className="flex items-center gap-2">
-          <span className="text-sm font-medium text-slate-800">{selectedTheme.name}</span>
           <Badge variant="secondary" className="text-xs bg-slate-100 text-slate-600 border-slate-200">
-            {selectedTheme.responses.length}
+            {selectedTheme.responses.length} responses
           </Badge>
         </div>
         <p className="text-sm text-slate-500 mt-1">{selectedTheme.description}</p>
