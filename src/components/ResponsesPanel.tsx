@@ -36,7 +36,7 @@ export function ResponsesPanel({ selectedTheme, onResponseClick }: ResponsesPane
   return (
     <Card className="h-full border-slate-200 bg-white shadow-sm overflow-hidden flex flex-col">
       <div className="flex items-center justify-between px-4 py-3 bg-slate-800 shrink-0">
-        <h2 className="text-sm font-medium text-white">{selectedTheme.name}</h2>
+        <h2 className="text-sm font-medium text-white">{selectedTheme.name} ({selectedTheme.responses.length})</h2>
         <List className="h-4 w-4 text-slate-400" />
       </div>
       <div className="p-4 pb-2 border-b border-slate-200 shrink-0">
