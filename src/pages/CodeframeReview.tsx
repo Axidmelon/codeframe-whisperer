@@ -83,25 +83,35 @@ export default function CodeframeReview() {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-slate-50">
       {/* Top Panel */}
-      <header className="border-b border-border/50 bg-card/50 backdrop-blur-sm sticky top-0 z-10">
-        <div className="container mx-auto px-4 py-4">
+      <header className="border-b border-slate-200 bg-white sticky top-0 z-10">
+        <div className="container mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <FileText className="h-6 w-6 text-primary" />
-              <h1 className="text-2xl font-bold">Codeframe Review</h1>
+              <FileText className="h-5 w-5 text-emerald-700" />
+              <h1 className="text-xl font-semibold text-slate-900">Codeframe Review</h1>
             </div>
 
             <div className="flex items-center gap-4">
               <Tabs value={view} onValueChange={(v) => handleViewChange(v as "question" | "overall")}>
-                <TabsList>
-                  <TabsTrigger value="question">Question Level</TabsTrigger>
-                  <TabsTrigger value="overall">Overall Codeframe</TabsTrigger>
+                <TabsList className="bg-slate-100 border border-slate-200">
+                  <TabsTrigger 
+                    value="question" 
+                    className="data-[state=active]:bg-white data-[state=active]:text-emerald-700 data-[state=active]:shadow-sm"
+                  >
+                    Question Level
+                  </TabsTrigger>
+                  <TabsTrigger 
+                    value="overall"
+                    className="data-[state=active]:bg-white data-[state=active]:text-emerald-700 data-[state=active]:shadow-sm"
+                  >
+                    Overall Codeframe
+                  </TabsTrigger>
                 </TabsList>
               </Tabs>
 
-              <Button variant="outline" size="sm">
+              <Button variant="outline" size="sm" className="border-slate-200 text-slate-600 hover:bg-slate-50">
                 <Download className="h-4 w-4 mr-2" />
                 Export
               </Button>
@@ -114,12 +124,12 @@ export default function CodeframeReview() {
                 value={selectedQuestion.toString()}
                 onValueChange={(value) => handleQuestionChange(parseInt(value))}
               >
-                <SelectTrigger className="w-[400px] bg-background">
+                <SelectTrigger className="w-[450px] bg-white border-slate-200 text-slate-700">
                   <SelectValue placeholder="Select a question" />
                 </SelectTrigger>
-                <SelectContent className="bg-background">
+                <SelectContent className="bg-white border-slate-200">
                   {questionLevelData.map((q, idx) => (
-                    <SelectItem key={q.id} value={idx.toString()}>
+                    <SelectItem key={q.id} value={idx.toString()} className="text-slate-700">
                       Q{idx + 1}: {q.text}
                     </SelectItem>
                   ))}
@@ -130,7 +140,7 @@ export default function CodeframeReview() {
 
 
           {view === "overall" && (
-            <div className="flex gap-6 mt-3 text-sm text-muted-foreground">
+            <div className="flex gap-6 mt-3 text-sm text-slate-500">
               <span>Total Questions: {overallCodeframe.totalQuestions}</span>
               <span>Total Themes: {overallCodeframe.totalThemes}</span>
               <span>Total Responses: {overallCodeframe.totalResponses}</span>
@@ -140,11 +150,11 @@ export default function CodeframeReview() {
       </header>
 
       {/* Main Content */}
-      <div className="container mx-auto px-4 py-6">
+      <div className="container mx-auto px-6 py-6">
         <div className={`grid grid-cols-1 gap-6 h-[calc(100vh-200px)] ${isChatCollapsed ? 'lg:grid-cols-[1fr_1fr_auto]' : 'lg:grid-cols-3'}`}>
           {/* Left Panel - Themes */}
-          <div className="border border-border/50 rounded-lg bg-card/30 p-4">
-            <h2 className="text-lg font-semibold mb-4">Themes ({themes.length})</h2>
+          <div className="border border-slate-200 rounded-lg bg-white p-4 shadow-sm">
+            <h2 className="text-base font-semibold text-slate-800 mb-4">Themes ({themes.length})</h2>
             <ScrollArea className="h-[calc(100%-3rem)]">
               {themes.map((theme) => (
                 <ThemeCard

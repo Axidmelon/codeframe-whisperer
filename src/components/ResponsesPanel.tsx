@@ -18,8 +18,8 @@ const sentimentConfig: Record<Sentiment, { icon: typeof ThumbsUp; label: string;
 export function ResponsesPanel({ selectedTheme, onResponseClick }: ResponsesPanelProps) {
   if (!selectedTheme) {
     return (
-      <Card className="h-full flex items-center justify-center border-border/50 bg-card/30">
-        <div className="text-center text-muted-foreground p-6">
+      <Card className="h-full flex items-center justify-center border-slate-200 bg-white shadow-sm">
+        <div className="text-center text-slate-400 p-6">
           <MessageSquare className="h-12 w-12 mx-auto mb-3 opacity-50" />
           <p className="text-sm">Select a theme to view responses</p>
         </div>
@@ -28,15 +28,15 @@ export function ResponsesPanel({ selectedTheme, onResponseClick }: ResponsesPane
   }
 
   return (
-    <Card className="h-full border-border/50 bg-card/30">
+    <Card className="h-full border-slate-200 bg-white shadow-sm">
       <CardHeader className="pb-3">
-        <CardTitle className="text-lg flex items-center gap-2">
+        <CardTitle className="text-base font-semibold text-slate-800 flex items-center gap-2">
           <span>{selectedTheme.name}</span>
-          <Badge variant="secondary" className="text-xs">
+          <Badge variant="secondary" className="text-xs bg-slate-100 text-slate-600 border-slate-200">
             {selectedTheme.responses.length} responses
           </Badge>
         </CardTitle>
-        <p className="text-sm text-muted-foreground">{selectedTheme.description}</p>
+        <p className="text-sm text-slate-500">{selectedTheme.description}</p>
       </CardHeader>
       <CardContent className="p-0">
         <ScrollArea className="h-[calc(100%-5rem)] px-6 pb-4">
@@ -48,15 +48,15 @@ export function ResponsesPanel({ selectedTheme, onResponseClick }: ResponsesPane
                 <div
                   key={response.id}
                   onClick={() => onResponseClick(response.id, response.text)}
-                  className="p-3 rounded-md border border-border/50 bg-background/50 hover:bg-accent/50 cursor-pointer transition-colors"
+                  className="p-3 rounded-md border border-slate-200 bg-slate-50 hover:bg-slate-100 cursor-pointer transition-colors"
                 >
-                  <p className="text-sm mb-2">{response.text}</p>
+                  <p className="text-sm text-slate-700 mb-2">{response.text}</p>
                   <div className="flex items-center gap-2">
                     <Badge variant="outline" className={`text-xs flex items-center gap-1 ${sentiment.className}`}>
                       <SentimentIcon className="h-3 w-3" />
                       {sentiment.label}
                     </Badge>
-                    <Badge variant="outline" className="text-xs font-mono">
+                    <Badge variant="outline" className="text-xs font-mono bg-white text-slate-600 border-slate-200">
                       {response.code}
                     </Badge>
                   </div>
