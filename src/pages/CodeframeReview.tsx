@@ -153,28 +153,28 @@ export default function CodeframeReview() {
       <div className="container mx-auto px-6 py-6">
         <div className={`grid grid-cols-1 gap-6 h-[calc(100vh-200px)] ${isChatCollapsed ? 'lg:grid-cols-[1fr_1fr_auto]' : 'lg:grid-cols-3'}`}>
           {/* Left Panel - Themes */}
-          <div className="border border-slate-200 rounded-lg bg-white shadow-sm overflow-hidden">
-            <div className="flex items-center justify-between px-4 py-3 bg-slate-800 rounded-t-lg">
+          <div className="border border-slate-200 rounded-lg bg-white shadow-sm overflow-hidden flex flex-col">
+            <div className="flex items-center justify-between px-4 py-3 bg-slate-800 shrink-0">
               <h2 className="text-sm font-medium text-white">Themes ({themes.length})</h2>
               <FileText className="h-4 w-4 text-slate-400" />
             </div>
-            <div className="p-4">
-              <ScrollArea className="h-[calc(100%-1rem)]">
-              {themes.map((theme) => (
-                <ThemeCard
-                  key={theme.id}
-                  theme={theme}
-                  isSelected={selectedTheme?.id === theme.id}
-                  onSelect={() => handleThemeSelect(theme)}
-                  onRename={handleRename}
-                  onDelete={handleDelete}
-                  onMerge={handleMerge}
-                  onResponseClick={handleResponseClick}
-                  onCodeChange={handleCodeChange}
-                />
-              ))}
-              </ScrollArea>
-            </div>
+            <ScrollArea className="flex-1">
+              <div className="p-4 space-y-2">
+                {themes.map((theme) => (
+                  <ThemeCard
+                    key={theme.id}
+                    theme={theme}
+                    isSelected={selectedTheme?.id === theme.id}
+                    onSelect={() => handleThemeSelect(theme)}
+                    onRename={handleRename}
+                    onDelete={handleDelete}
+                    onMerge={handleMerge}
+                    onResponseClick={handleResponseClick}
+                    onCodeChange={handleCodeChange}
+                  />
+                ))}
+              </div>
+            </ScrollArea>
           </div>
 
           {/* Middle Panel - Responses */}

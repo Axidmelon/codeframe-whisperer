@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -110,7 +110,7 @@ export const ChatPanel = ({ selectedResponse, selectedQuestion, isCollapsed, onT
 
   return (
     <Card className="h-full flex flex-col border-slate-200 bg-white shadow-sm overflow-hidden">
-      <div className="flex items-center justify-between px-4 py-3 bg-slate-800 rounded-t-lg">
+      <div className="flex items-center justify-between px-4 py-3 bg-slate-800 shrink-0">
         <h2 className="text-sm font-medium text-white">Chat</h2>
         <div className="flex items-center gap-2">
           <SlidersHorizontal className="h-4 w-4 text-slate-400" />
@@ -125,7 +125,7 @@ export const ChatPanel = ({ selectedResponse, selectedQuestion, isCollapsed, onT
         </div>
       </div>
       {(selectedQuestion || selectedResponse) && (
-        <div className="px-4 py-2 border-b border-slate-200 bg-slate-50">
+        <div className="px-4 py-2 border-b border-slate-200 bg-slate-50 shrink-0">
           {selectedQuestion && (
             <p className="text-xs text-emerald-700 font-medium mb-1">
               Context: {selectedQuestion.text}
@@ -139,56 +139,54 @@ export const ChatPanel = ({ selectedResponse, selectedQuestion, isCollapsed, onT
         </div>
       )}
 
-      <CardContent className="flex-1 flex flex-col p-0">
-        <ScrollArea className="flex-1 p-4">
-          <div className="space-y-4">
-            {messages.map((message) => (
+      <ScrollArea className="flex-1">
+        <div className="p-4 space-y-4">
+          {messages.map((message) => (
+            <div
+              key={message.id}
+              className={`flex gap-3 ${message.role === "user" ? "flex-row-reverse" : ""}`}
+            >
               <div
-                key={message.id}
-                className={`flex gap-3 ${message.role === "user" ? "flex-row-reverse" : ""}`}
+                className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full ${
+                  message.role === "user"
+                    ? "bg-emerald-700 text-white"
+                    : "bg-slate-100"
+                }`}
               >
-                <div
-                  className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full ${
-                    message.role === "user"
-                      ? "bg-emerald-700 text-white"
-                      : "bg-slate-100"
-                  }`}
-                >
-                  {message.role === "user" ? (
-                    <User className="h-4 w-4" />
-                  ) : (
-                    <Bot className="h-4 w-4 text-slate-600" />
-                  )}
-                </div>
-                <div
-                  className={`flex-1 rounded-lg p-3 ${
-                    message.role === "user"
-                      ? "bg-emerald-700 text-white"
-                      : "bg-slate-100 text-slate-700"
-                  }`}
-                >
-                  <p className="text-sm">{message.content}</p>
-                </div>
+                {message.role === "user" ? (
+                  <User className="h-4 w-4" />
+                ) : (
+                  <Bot className="h-4 w-4 text-slate-600" />
+                )}
               </div>
-            ))}
-          </div>
-        </ScrollArea>
-
-        <div className="border-t border-slate-200 p-4">
-          <div className="flex gap-2">
-            <Input
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && handleSend()}
-              placeholder="Ask about theme assignments..."
-              className="flex-1 border-slate-200"
-            />
-            <Button onClick={handleSend} size="icon" className="bg-emerald-700 hover:bg-emerald-800">
-              <Send className="h-4 w-4" />
-            </Button>
-          </div>
+              <div
+                className={`flex-1 rounded-lg p-3 ${
+                  message.role === "user"
+                    ? "bg-emerald-700 text-white"
+                    : "bg-slate-100 text-slate-700"
+                }`}
+              >
+                <p className="text-sm">{message.content}</p>
+              </div>
+            </div>
+          ))}
         </div>
-      </CardContent>
+      </ScrollArea>
+
+      <div className="border-t border-slate-200 p-4 shrink-0">
+        <div className="flex gap-2">
+          <Input
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && handleSend()}
+            placeholder="Ask about theme assignments..."
+            className="flex-1 border-slate-200"
+          />
+          <Button onClick={handleSend} size="icon" className="bg-emerald-700 hover:bg-emerald-800">
+            <Send className="h-4 w-4" />
+          </Button>
+        </div>
+      </div>
     </Card>
   );
 };
