@@ -188,7 +188,11 @@ export default function CodeframeReview() {
           {/* Right Panel - Chat */}
           <div className={`h-full ${isChatCollapsed ? 'w-16' : ''}`}>
             <ChatPanel 
-              selectedResponse={selectedResponse} 
+              selectedResponse={selectedResponse}
+              selectedQuestion={view === "question" ? {
+                text: questionLevelData[selectedQuestion].text,
+                themes: themes.map(t => ({ name: t.name, description: t.description }))
+              } : undefined}
               isCollapsed={isChatCollapsed}
               onToggleCollapse={() => setIsChatCollapsed(!isChatCollapsed)}
             />
