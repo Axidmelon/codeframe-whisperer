@@ -45,7 +45,7 @@ export function ResponsesPanel({ selectedTheme, onResponseClick }: ResponsesPane
             {selectedTheme.responses.length} responses
           </Badge>
         </div>
-        <p className="text-sm text-slate-500 mt-1">{selectedTheme.description}</p>
+        <p className="text-sm text-slate-500 mt-1">{selectedTheme.reasoning}</p>
       </div>
       <ScrollArea className="flex-1">
         <div className="p-4 space-y-3">
