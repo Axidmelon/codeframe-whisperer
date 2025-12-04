@@ -1,9 +1,9 @@
 import { useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Send, Bot, User, PanelRightClose, PanelRightOpen } from "lucide-react";
+import { Send, Bot, User, PanelRightClose, PanelRightOpen, SlidersHorizontal } from "lucide-react";
 
 interface Message {
   id: string;
@@ -82,28 +82,28 @@ export const ChatPanel = ({ selectedResponse, isCollapsed, onToggleCollapse }: C
   }
 
   return (
-    <Card className="h-full flex flex-col border-slate-200 bg-white shadow-sm">
-      <CardHeader className="border-b border-slate-200 pb-4">
-        <div className="flex items-center justify-between">
-          <CardTitle className="flex items-center gap-2 text-base font-semibold text-slate-800">
-            <Bot className="h-5 w-5 text-emerald-700" />
-            AI Assistant
-          </CardTitle>
+    <Card className="h-full flex flex-col border-slate-200 bg-white shadow-sm overflow-hidden">
+      <div className="flex items-center justify-between px-4 py-3 bg-slate-800 rounded-t-lg">
+        <h2 className="text-sm font-medium text-white">Chat</h2>
+        <div className="flex items-center gap-2">
+          <SlidersHorizontal className="h-4 w-4 text-slate-400" />
           <Button
             variant="ghost"
             size="icon"
             onClick={onToggleCollapse}
-            className="h-8 w-8 text-slate-500 hover:text-slate-700"
+            className="h-6 w-6 text-slate-400 hover:text-white hover:bg-slate-700"
           >
             <PanelRightClose className="h-4 w-4" />
           </Button>
         </div>
-        {selectedResponse && (
-          <p className="text-xs text-slate-500 mt-2 line-clamp-2">
+      </div>
+      {selectedResponse && (
+        <div className="px-4 py-2 border-b border-slate-200 bg-slate-50">
+          <p className="text-xs text-slate-500 line-clamp-2">
             Discussing: "{selectedResponse.text}"
           </p>
-        )}
-      </CardHeader>
+        </div>
+      )}
 
       <CardContent className="flex-1 flex flex-col p-0">
         <ScrollArea className="flex-1 p-4">

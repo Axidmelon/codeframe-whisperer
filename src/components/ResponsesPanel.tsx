@@ -1,8 +1,8 @@
 import { Theme, Sentiment } from "@/data/dummyCodeframe";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Badge } from "@/components/ui/badge";
-import { MessageSquare, ThumbsUp, ThumbsDown, Minus } from "lucide-react";
+import { MessageSquare, ThumbsUp, ThumbsDown, Minus, List } from "lucide-react";
 
 interface ResponsesPanelProps {
   selectedTheme: Theme | null;
@@ -18,26 +18,36 @@ const sentimentConfig: Record<Sentiment, { icon: typeof ThumbsUp; label: string;
 export function ResponsesPanel({ selectedTheme, onResponseClick }: ResponsesPanelProps) {
   if (!selectedTheme) {
     return (
-      <Card className="h-full flex items-center justify-center border-slate-200 bg-white shadow-sm">
-        <div className="text-center text-slate-400 p-6">
-          <MessageSquare className="h-12 w-12 mx-auto mb-3 opacity-50" />
-          <p className="text-sm">Select a theme to view responses</p>
+      <Card className="h-full border-slate-200 bg-white shadow-sm overflow-hidden">
+        <div className="flex items-center justify-between px-4 py-3 bg-slate-800 rounded-t-lg">
+          <h2 className="text-sm font-medium text-white">Responses</h2>
+          <List className="h-4 w-4 text-slate-400" />
+        </div>
+        <div className="flex-1 flex items-center justify-center h-[calc(100%-52px)]">
+          <div className="text-center text-slate-400 p-6">
+            <MessageSquare className="h-12 w-12 mx-auto mb-3 opacity-50" />
+            <p className="text-sm">Select a theme to view responses</p>
+          </div>
         </div>
       </Card>
     );
   }
 
   return (
-    <Card className="h-full border-slate-200 bg-white shadow-sm">
-      <CardHeader className="pb-3">
-        <CardTitle className="text-base font-semibold text-slate-800 flex items-center gap-2">
-          <span>{selectedTheme.name}</span>
+    <Card className="h-full border-slate-200 bg-white shadow-sm overflow-hidden">
+      <div className="flex items-center justify-between px-4 py-3 bg-slate-800 rounded-t-lg">
+        <h2 className="text-sm font-medium text-white">Responses</h2>
+        <List className="h-4 w-4 text-slate-400" />
+      </div>
+      <div className="p-4 pb-2 border-b border-slate-200">
+        <div className="flex items-center gap-2">
+          <span className="text-sm font-medium text-slate-800">{selectedTheme.name}</span>
           <Badge variant="secondary" className="text-xs bg-slate-100 text-slate-600 border-slate-200">
-            {selectedTheme.responses.length} responses
+            {selectedTheme.responses.length}
           </Badge>
-        </CardTitle>
-        <p className="text-sm text-slate-500">{selectedTheme.description}</p>
-      </CardHeader>
+        </div>
+        <p className="text-sm text-slate-500 mt-1">{selectedTheme.description}</p>
+      </div>
       <CardContent className="p-0">
         <ScrollArea className="h-[calc(100%-5rem)] px-6 pb-4">
           <div className="space-y-3">
