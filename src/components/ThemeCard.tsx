@@ -4,26 +4,10 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ChevronDown, ChevronUp, MoreVertical, Pencil, Merge, Trash2 } from "lucide-react";
 import { Theme } from "@/data/dummyCodeframe";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-
 interface ThemeCardProps {
   theme: Theme;
   isSelected?: boolean;
@@ -34,37 +18,37 @@ interface ThemeCardProps {
   onResponseClick: (responseId: string, responseText: string) => void;
   onCodeChange: (responseId: string, newCode: string) => void;
 }
-
-export const ThemeCard = ({ theme, isSelected, onSelect, onRename, onDelete, onMerge, onResponseClick, onCodeChange }: ThemeCardProps) => {
+export const ThemeCard = ({
+  theme,
+  isSelected,
+  onSelect,
+  onRename,
+  onDelete,
+  onMerge,
+  onResponseClick,
+  onCodeChange
+}: ThemeCardProps) => {
   const [expanded, setExpanded] = useState(false);
   const [editName, setEditName] = useState(theme.name);
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [editingCodeId, setEditingCodeId] = useState<string | null>(null);
   const [editCode, setEditCode] = useState("");
-
   const handleRename = () => {
     onRename(theme.id, editName);
     setIsEditOpen(false);
   };
-
   const handleCodeEdit = (responseId: string, currentCode: string) => {
     setEditingCodeId(responseId);
     setEditCode(currentCode);
   };
-
   const handleCodeSave = () => {
     if (editingCodeId) {
       onCodeChange(editingCodeId, editCode);
       setEditingCodeId(null);
     }
   };
-
-  return (
-    <Card 
-      className={`mb-3 border-slate-200 hover:border-emerald-600/50 transition-all cursor-pointer bg-white shadow-sm ${isSelected ? 'border-emerald-600 ring-1 ring-emerald-600' : ''}`}
-      onClick={onSelect}
-    >
+  return <Card className={`mb-3 border-slate-200 hover:border-emerald-600/50 transition-all cursor-pointer bg-white shadow-sm ${isSelected ? 'border-emerald-600 ring-1 ring-emerald-600' : ''}`} onClick={onSelect}>
       <CardHeader className="pb-3">
         <div className="flex items-start justify-between">
           <div className="flex-1">
@@ -76,7 +60,7 @@ export const ThemeCard = ({ theme, isSelected, onSelect, onRename, onDelete, onM
             </CardTitle>
             <CardDescription className="text-sm mt-1 text-slate-500">{theme.description}</CardDescription>
           </div>
-          <div className="flex gap-1 ml-2" onClick={(e) => e.stopPropagation()}>
+          <div className="flex gap-1 ml-2" onClick={e => e.stopPropagation()}>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" size="icon" className="h-8 w-8">
@@ -100,12 +84,7 @@ export const ThemeCard = ({ theme, isSelected, onSelect, onRename, onDelete, onM
               </DropdownMenuContent>
             </DropdownMenu>
 
-            <Button
-              variant="ghost"
-              size="icon"
-              className="h-8 w-8"
-              onClick={() => setExpanded(!expanded)}
-            >
+            <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => setExpanded(!expanded)}>
               {expanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
             </Button>
           </div>
@@ -122,12 +101,7 @@ export const ThemeCard = ({ theme, isSelected, onSelect, onRename, onDelete, onM
             </AlertDialogHeader>
             <div className="py-4">
               <Label htmlFor="theme-name">Theme Name</Label>
-              <Input
-                id="theme-name"
-                value={editName}
-                onChange={(e) => setEditName(e.target.value)}
-                className="mt-2"
-              />
+              <Input id="theme-name" value={editName} onChange={e => setEditName(e.target.value)} className="mt-2" />
             </div>
             <AlertDialogFooter>
               <AlertDialogCancel>Cancel</AlertDialogCancel>
@@ -155,7 +129,7 @@ export const ThemeCard = ({ theme, isSelected, onSelect, onRename, onDelete, onM
         </AlertDialog>
 
         {/* Code Edit Dialog */}
-        <AlertDialog open={editingCodeId !== null} onOpenChange={(open) => !open && setEditingCodeId(null)}>
+        <AlertDialog open={editingCodeId !== null} onOpenChange={open => !open && setEditingCodeId(null)}>
           <AlertDialogContent>
             <AlertDialogHeader>
               <AlertDialogTitle>Edit Response Code</AlertDialogTitle>
@@ -165,13 +139,7 @@ export const ThemeCard = ({ theme, isSelected, onSelect, onRename, onDelete, onM
             </AlertDialogHeader>
             <div className="py-4">
               <Label htmlFor="response-code">Code</Label>
-              <Input
-                id="response-code"
-                value={editCode}
-                onChange={(e) => setEditCode(e.target.value)}
-                className="mt-2"
-                placeholder="Enter code (e.g., Q1_1)"
-              />
+              <Input id="response-code" value={editCode} onChange={e => setEditCode(e.target.value)} className="mt-2" placeholder="Enter code (e.g., Q1_1)" />
             </div>
             <AlertDialogFooter>
               <AlertDialogCancel>Cancel</AlertDialogCancel>
@@ -181,18 +149,8 @@ export const ThemeCard = ({ theme, isSelected, onSelect, onRename, onDelete, onM
         </AlertDialog>
       </CardHeader>
 
-      {expanded && (
-        <CardContent className="pt-0">
-          <div className="p-4 rounded-lg bg-emerald-50 border border-emerald-200">
-            <h4 className="text-sm font-semibold text-emerald-700 mb-2">
-              Why this theme name?
-            </h4>
-            <p className="text-sm text-slate-600 leading-relaxed">
-              {theme.reasoning}
-            </p>
-          </div>
-        </CardContent>
-      )}
-    </Card>
-  );
+      {expanded && <CardContent className="pt-0">
+          
+        </CardContent>}
+    </Card>;
 };
