@@ -67,39 +67,39 @@ export const ChatPanel = ({ selectedResponse, isCollapsed, onToggleCollapse }: C
 
   if (isCollapsed) {
     return (
-      <div className="h-full flex flex-col items-center pt-4 border border-border/50 rounded-lg bg-card/30">
+      <div className="h-full flex flex-col items-center pt-4 border border-slate-200 rounded-lg bg-white shadow-sm">
         <Button
           variant="outline"
           size="icon"
           onClick={onToggleCollapse}
-          className="h-10 w-10"
+          className="h-10 w-10 border-slate-200"
         >
-          <PanelRightOpen className="h-5 w-5" />
+          <PanelRightOpen className="h-5 w-5 text-slate-600" />
         </Button>
-        <span className="text-xs text-muted-foreground mt-2 [writing-mode:vertical-lr]">AI Assistant</span>
+        <span className="text-xs text-slate-500 mt-2 [writing-mode:vertical-lr]">AI Assistant</span>
       </div>
     );
   }
 
   return (
-    <Card className="h-full flex flex-col border-border/50">
-      <CardHeader className="border-b border-border/50 pb-4">
+    <Card className="h-full flex flex-col border-slate-200 bg-white shadow-sm">
+      <CardHeader className="border-b border-slate-200 pb-4">
         <div className="flex items-center justify-between">
-          <CardTitle className="flex items-center gap-2">
-            <Bot className="h-5 w-5 text-primary" />
+          <CardTitle className="flex items-center gap-2 text-base font-semibold text-slate-800">
+            <Bot className="h-5 w-5 text-emerald-700" />
             AI Assistant
           </CardTitle>
           <Button
             variant="ghost"
             size="icon"
             onClick={onToggleCollapse}
-            className="h-8 w-8"
+            className="h-8 w-8 text-slate-500 hover:text-slate-700"
           >
             <PanelRightClose className="h-4 w-4" />
           </Button>
         </div>
         {selectedResponse && (
-          <p className="text-xs text-muted-foreground mt-2 line-clamp-2">
+          <p className="text-xs text-slate-500 mt-2 line-clamp-2">
             Discussing: "{selectedResponse.text}"
           </p>
         )}
@@ -116,21 +116,21 @@ export const ChatPanel = ({ selectedResponse, isCollapsed, onToggleCollapse }: C
                 <div
                   className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full ${
                     message.role === "user"
-                      ? "bg-primary text-primary-foreground"
-                      : "bg-muted"
+                      ? "bg-emerald-700 text-white"
+                      : "bg-slate-100"
                   }`}
                 >
                   {message.role === "user" ? (
                     <User className="h-4 w-4" />
                   ) : (
-                    <Bot className="h-4 w-4" />
+                    <Bot className="h-4 w-4 text-slate-600" />
                   )}
                 </div>
                 <div
                   className={`flex-1 rounded-lg p-3 ${
                     message.role === "user"
-                      ? "bg-primary text-primary-foreground"
-                      : "bg-muted"
+                      ? "bg-emerald-700 text-white"
+                      : "bg-slate-100 text-slate-700"
                   }`}
                 >
                   <p className="text-sm">{message.content}</p>
@@ -140,16 +140,16 @@ export const ChatPanel = ({ selectedResponse, isCollapsed, onToggleCollapse }: C
           </div>
         </ScrollArea>
 
-        <div className="border-t border-border/50 p-4">
+        <div className="border-t border-slate-200 p-4">
           <div className="flex gap-2">
             <Input
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && handleSend()}
               placeholder="Ask about theme assignments..."
-              className="flex-1"
+              className="flex-1 border-slate-200"
             />
-            <Button onClick={handleSend} size="icon">
+            <Button onClick={handleSend} size="icon" className="bg-emerald-700 hover:bg-emerald-800">
               <Send className="h-4 w-4" />
             </Button>
           </div>

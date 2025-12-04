@@ -62,19 +62,19 @@ export const ThemeCard = ({ theme, isSelected, onSelect, onRename, onDelete, onM
 
   return (
     <Card 
-      className={`mb-3 border-border/50 hover:border-primary/50 transition-all cursor-pointer ${isSelected ? 'border-primary ring-1 ring-primary' : ''}`}
+      className={`mb-3 border-slate-200 hover:border-emerald-600/50 transition-all cursor-pointer bg-white shadow-sm ${isSelected ? 'border-emerald-600 ring-1 ring-emerald-600' : ''}`}
       onClick={onSelect}
     >
       <CardHeader className="pb-3">
         <div className="flex items-start justify-between">
           <div className="flex-1">
-            <CardTitle className="text-lg flex items-center gap-2">
+            <CardTitle className="text-base font-medium text-slate-800 flex items-center gap-2">
               {theme.name}
-              <Badge variant="secondary" className="ml-2">
+              <Badge variant="secondary" className="ml-2 bg-slate-100 text-slate-600 border-slate-200">
                 {theme.responses.length}
               </Badge>
             </CardTitle>
-            <CardDescription className="text-sm mt-1">{theme.description}</CardDescription>
+            <CardDescription className="text-sm mt-1 text-slate-500">{theme.description}</CardDescription>
           </div>
           <div className="flex gap-1 ml-2" onClick={(e) => e.stopPropagation()}>
             <DropdownMenu>
@@ -183,11 +183,11 @@ export const ThemeCard = ({ theme, isSelected, onSelect, onRename, onDelete, onM
 
       {expanded && (
         <CardContent className="pt-0">
-          <div className="p-4 rounded-lg bg-primary/10 border border-primary/20">
-            <h4 className="text-sm font-semibold text-primary mb-2">
+          <div className="p-4 rounded-lg bg-emerald-50 border border-emerald-200">
+            <h4 className="text-sm font-semibold text-emerald-700 mb-2">
               Why this theme name?
             </h4>
-            <p className="text-sm text-muted-foreground leading-relaxed">
+            <p className="text-sm text-slate-600 leading-relaxed">
               {theme.reasoning}
             </p>
           </div>
