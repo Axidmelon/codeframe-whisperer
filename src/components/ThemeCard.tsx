@@ -48,42 +48,45 @@ export const ThemeCard = ({
       setEditingCodeId(null);
     }
   };
-  return <Card className={`mb-3 border-slate-200 hover:border-emerald-600/50 transition-all cursor-pointer bg-white shadow-sm ${isSelected ? 'border-emerald-600 ring-1 ring-emerald-600' : ''}`} onClick={onSelect}>
-      <CardHeader className="pb-3">
-        <div className="flex items-start justify-between">
-          <div className="flex-1">
-            <CardTitle className="text-base font-medium text-slate-800 flex items-center gap-2">
-              {theme.name}
-              <Badge variant="secondary" className="ml-2 bg-slate-100 text-slate-600 border-slate-200">
+  return <Card className={`border border-slate-200/80 hover:border-slate-300 hover:shadow-md transition-all duration-200 cursor-pointer bg-white rounded-xl ${isSelected ? 'border-emerald-500 ring-2 ring-emerald-500/20 shadow-md' : 'shadow-sm'}`} onClick={onSelect}>
+      <CardHeader className="p-5">
+        <div className="flex items-start justify-between gap-3">
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center gap-3">
+              <CardTitle className="text-[15px] font-semibold text-slate-800 leading-tight">
+                {theme.name}
+              </CardTitle>
+              <Badge variant="secondary" className="shrink-0 h-6 min-w-[28px] flex items-center justify-center rounded-full bg-slate-100 text-slate-600 text-xs font-medium border-0">
                 {theme.responses.length}
               </Badge>
-            </CardTitle>
-            <CardDescription className="text-sm mt-1 text-slate-500">{theme.description}</CardDescription>
+            </div>
+            <CardDescription className="text-[13px] mt-2 text-slate-500 leading-relaxed line-clamp-2">
+              {theme.description}
+            </CardDescription>
           </div>
-          <div className="flex gap-1 ml-2" onClick={e => e.stopPropagation()}>
+          <div className="shrink-0" onClick={e => e.stopPropagation()}>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon" className="h-8 w-8">
+                <Button variant="ghost" size="icon" className="h-8 w-8 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-lg">
                   <MoreVertical className="h-4 w-4" />
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuItem onClick={() => setIsEditOpen(true)}>
+              <DropdownMenuContent align="end" className="w-40">
+                <DropdownMenuItem onClick={() => setIsEditOpen(true)} className="text-sm">
                   <Pencil className="h-4 w-4 mr-2" />
                   Rename
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => onMerge(theme.id)}>
+                <DropdownMenuItem onClick={() => onMerge(theme.id)} className="text-sm">
                   <Merge className="h-4 w-4 mr-2" />
                   Merge
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={() => setIsDeleteOpen(true)} className="text-destructive">
+                <DropdownMenuItem onClick={() => setIsDeleteOpen(true)} className="text-destructive text-sm">
                   <Trash2 className="h-4 w-4 mr-2" />
                   Delete
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
-
           </div>
         </div>
 
