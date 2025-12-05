@@ -1,13 +1,12 @@
 import { useState } from "react";
+import { Header } from "@/components/Header";
+import { CodeframeHeader } from "@/components/CodeframeHeader";
 import { ThemeCard } from "@/components/ThemeCard";
 import { ResponsesPanel } from "@/components/ResponsesPanel";
 import { ChatPanel } from "@/components/ChatPanel";
 import { questionLevelData, overallCodeframe, Theme } from "@/data/dummyCodeframe";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Button } from "@/components/ui/button";
-import { Download, FileText } from "lucide-react";
+import { FileText } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 export default function CodeframeReview() {
@@ -84,74 +83,26 @@ export default function CodeframeReview() {
 
   return (
     <div className="min-h-screen bg-slate-50">
-      {/* Top Panel */}
-      <header className="border-b border-slate-200 bg-white sticky top-0 z-10">
-        <div className="container mx-auto px-6 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <FileText className="h-5 w-5 text-emerald-700" />
-              <h1 className="text-xl font-semibold text-slate-900">Codeframe Review</h1>
-            </div>
+      {/* Global Header */}
+      <Header />
 
-            <div className="flex items-center gap-4">
-              <Tabs value={view} onValueChange={(v) => handleViewChange(v as "question" | "overall")}>
-                <TabsList className="bg-slate-100 border border-slate-200">
-                  <TabsTrigger 
-                    value="question" 
-                    className="data-[state=active]:bg-white data-[state=active]:text-emerald-700 data-[state=active]:shadow-sm"
-                  >
-                    Question Level
-                  </TabsTrigger>
-                  <TabsTrigger 
-                    value="overall"
-                    className="data-[state=active]:bg-white data-[state=active]:text-emerald-700 data-[state=active]:shadow-sm"
-                  >
-                    Overall Codeframe
-                  </TabsTrigger>
-                </TabsList>
-              </Tabs>
-
-              <Button variant="outline" size="sm" className="border-slate-200 text-slate-600 hover:bg-slate-50">
-                <Download className="h-4 w-4 mr-2" />
-                Export
-              </Button>
-            </div>
-          </div>
-
-          {view === "question" && (
-            <div className="mt-4">
-              <Select
-                value={selectedQuestion.toString()}
-                onValueChange={(value) => handleQuestionChange(parseInt(value))}
-              >
-                <SelectTrigger className="w-[450px] bg-white border-slate-200 text-slate-700">
-                  <SelectValue placeholder="Select a question" />
-                </SelectTrigger>
-                <SelectContent className="bg-white border-slate-200">
-                  {questionLevelData.map((q, idx) => (
-                    <SelectItem key={q.id} value={idx.toString()} className="text-slate-700">
-                      Q{idx + 1}: {q.text}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-          )}
-
-
-          {view === "overall" && (
-            <div className="flex gap-6 mt-3 text-sm text-slate-500">
-              <span>Total Questions: {overallCodeframe.totalQuestions}</span>
-              <span>Total Themes: {overallCodeframe.totalThemes}</span>
-              <span>Total Responses: {overallCodeframe.totalResponses}</span>
-            </div>
-          )}
-        </div>
-      </header>
+      {/* Codeframe Header */}
+      <CodeframeHeader
+        view={view}
+        onViewChange={handleViewChange}
+        selectedQuestion={selectedQuestion}
+        onQuestionChange={handleQuestionChange}
+        questions={questionLevelData}
+        overallStats={{
+          totalQuestions: overallCodeframe.totalQuestions,
+          totalThemes: overallCodeframe.totalThemes,
+          totalResponses: overallCodeframe.totalResponses,
+        }}
+      />
 
       {/* Main Content */}
       <div className="container mx-auto px-6 py-6">
-        <div className={`grid grid-cols-1 gap-6 h-[calc(100vh-200px)] ${isChatCollapsed ? 'lg:grid-cols-[1fr_1fr_auto]' : 'lg:grid-cols-3'}`}>
+        <div className={`grid grid-cols-1 gap-6 h-[calc(100vh-260px)] ${isChatCollapsed ? 'lg:grid-cols-[1fr_1fr_auto]' : 'lg:grid-cols-3'}`}>
           {/* Left Panel - Themes */}
           <div className="border border-slate-200 rounded-lg bg-white shadow-sm overflow-hidden flex flex-col">
             <div className="flex items-center justify-between px-4 py-3 bg-slate-800 shrink-0">
