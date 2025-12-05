@@ -2,6 +2,7 @@ import { FileText, Download } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Question } from "@/data/dummyCodeframe";
 
 interface CodeframeHeaderProps {
@@ -52,10 +53,18 @@ export const CodeframeHeader = ({
               </TabsList>
             </Tabs>
 
-            <Button variant="outline" size="sm" className="border-slate-200 text-slate-600 hover:bg-slate-50">
-              <Download className="h-4 w-4 mr-2" />
-              Export
-            </Button>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button variant="outline" size="icon" className="border-slate-200 text-slate-600 hover:bg-slate-50">
+                    <Download className="h-4 w-4" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Export</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
           </div>
         </div>
 
