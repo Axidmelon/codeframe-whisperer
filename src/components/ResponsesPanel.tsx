@@ -51,11 +51,10 @@ export function ResponsesPanel({
         <h2 className="text-sm font-medium text-white">{selectedTheme.name} ({selectedTheme.responses.length})</h2>
         <List className="h-4 w-4 text-slate-400" />
       </div>
-      <div className="p-4 pb-2 border-b border-slate-200 shrink-0">
-        <div className="flex items-center gap-2">
-          
+      <div className="p-4 border-b border-slate-100 shrink-0">
+        <div className="bg-slate-50 rounded-lg p-3 border border-slate-100">
+          <p className="text-[13px] text-slate-600 leading-relaxed">{selectedTheme.reasoning}</p>
         </div>
-        <p className="text-sm text-slate-500 mt-1">{selectedTheme.reasoning}</p>
       </div>
       <ScrollArea className="flex-1">
         <div className="p-4 space-y-3">
