@@ -28,7 +28,6 @@ export const ThemeCard = ({
   onResponseClick,
   onCodeChange
 }: ThemeCardProps) => {
-  
   const [editName, setEditName] = useState(theme.name);
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
@@ -60,9 +59,7 @@ export const ThemeCard = ({
                 {theme.responses.length}
               </Badge>
             </div>
-            <CardDescription className="text-[13px] mt-2 text-slate-500 leading-relaxed line-clamp-2">
-              {theme.description}
-            </CardDescription>
+            
           </div>
           <div className="shrink-0" onClick={e => e.stopPropagation()}>
             <DropdownMenu>
