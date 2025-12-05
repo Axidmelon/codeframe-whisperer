@@ -102,7 +102,7 @@ export default function CodeframeReview() {
 
       {/* Main Content */}
       <div className="container mx-auto px-6 py-6">
-        <div className={`grid grid-cols-1 gap-6 h-[calc(100vh-260px)] ${isChatCollapsed ? 'lg:grid-cols-[1fr_1fr_auto]' : 'lg:grid-cols-3'}`}>
+        <div className={`grid grid-cols-1 gap-6 h-[calc(100vh-260px)] ${isChatCollapsed ? 'lg:grid-cols-[0.7fr_1fr_auto]' : 'lg:grid-cols-[0.7fr_1fr_1fr]'}`}>
           {/* Left Panel - Themes */}
           <div className="border border-slate-200 rounded-lg bg-white shadow-sm overflow-hidden flex flex-col">
             <div className="flex items-center justify-between px-4 py-3 bg-slate-800 shrink-0">
