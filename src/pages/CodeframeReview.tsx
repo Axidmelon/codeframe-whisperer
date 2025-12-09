@@ -95,9 +95,6 @@ export default function CodeframeReview() {
 
   return (
     <div className="min-h-screen bg-slate-50">
-      {/* Global Header */}
-      <Header />
-
       {/* Codeframe Header */}
       <CodeframeHeader
         view={view}
