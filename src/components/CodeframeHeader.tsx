@@ -1,4 +1,4 @@
-import { FileText, Download } from "lucide-react";
+import { FileText, Download, Sparkles, Loader2 } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
@@ -16,6 +16,8 @@ interface CodeframeHeaderProps {
     totalThemes: number;
     totalResponses: number;
   };
+  isAnalyzing?: boolean;
+  onRunAnalysis?: () => void;
 }
 
 export const CodeframeHeader = ({
@@ -25,6 +27,8 @@ export const CodeframeHeader = ({
   onQuestionChange,
   questions,
   overallStats,
+  isAnalyzing = false,
+  onRunAnalysis,
 }: CodeframeHeaderProps) => {
   return (
     <div className="border-b border-slate-200 bg-white sticky top-[57px] z-10">
@@ -69,7 +73,7 @@ export const CodeframeHeader = ({
         </div>
 
         {view === "question" && (
-          <div className="mt-4">
+          <div className="mt-4 flex items-center justify-between">
             <Select
               value={selectedQuestion.toString()}
               onValueChange={(value) => onQuestionChange(parseInt(value))}
@@ -85,14 +89,50 @@ export const CodeframeHeader = ({
                 ))}
               </SelectContent>
             </Select>
+            <Button
+              onClick={onRunAnalysis}
+              disabled={isAnalyzing}
+              className="bg-emerald-600 hover:bg-emerald-700 text-white"
+            >
+              {isAnalyzing ? (
+                <>
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                  Analyzing...
+                </>
+              ) : (
+                <>
+                  <Sparkles className="h-4 w-4 mr-2" />
+                  Run Analysis
+                </>
+              )}
+            </Button>
           </div>
         )}
 
         {view === "overall" && overallStats && (
-          <div className="flex gap-6 mt-3 text-sm text-slate-500">
-            <span>Total Questions: {overallStats.totalQuestions}</span>
-            <span>Total Themes: {overallStats.totalThemes}</span>
-            <span>Total Responses: {overallStats.totalResponses}</span>
+          <div className="mt-3 flex items-center justify-between">
+            <div className="flex gap-6 text-sm text-slate-500">
+              <span>Total Questions: {overallStats.totalQuestions}</span>
+              <span>Total Themes: {overallStats.totalThemes}</span>
+              <span>Total Responses: {overallStats.totalResponses}</span>
+            </div>
+            <Button
+              onClick={onRunAnalysis}
+              disabled={isAnalyzing}
+              className="bg-emerald-600 hover:bg-emerald-700 text-white"
+            >
+              {isAnalyzing ? (
+                <>
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                  Analyzing...
+                </>
+              ) : (
+                <>
+                  <Sparkles className="h-4 w-4 mr-2" />
+                  Run Analysis
+                </>
+              )}
+            </Button>
           </div>
         )}
       </div>
