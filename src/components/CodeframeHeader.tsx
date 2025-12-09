@@ -31,7 +31,7 @@ export const CodeframeHeader = ({
   onRunAnalysis,
 }: CodeframeHeaderProps) => {
   return (
-    <div className="border-b border-slate-200 bg-white sticky top-[57px] z-10">
+    <div className="border-b border-slate-200 bg-white sticky top-0 z-10">
       <div className="container mx-auto px-6 py-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
