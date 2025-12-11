@@ -1,15 +1,20 @@
-import { FileText, Download, Sparkles, Loader2 } from "lucide-react";
+import { FileText, Download, Sparkles, Loader2, ChevronDown } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Question } from "@/data/dummyCodeframe";
+import { Checkbox } from "@/components/ui/checkbox";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 interface CodeframeHeaderProps {
   view: "question" | "overall";
   onViewChange: (view: "question" | "overall") => void;
-  selectedQuestion: number;
-  onQuestionChange: (index: number) => void;
+  selectedQuestions: number[];
+  onQuestionChange: (indices: number[]) => void;
   questions: Question[];
   overallStats?: {
     totalQuestions: number;
@@ -23,13 +28,37 @@ interface CodeframeHeaderProps {
 export const CodeframeHeader = ({
   view,
   onViewChange,
-  selectedQuestion,
+  selectedQuestions,
   onQuestionChange,
   questions,
   overallStats,
   isAnalyzing = false,
   onRunAnalysis,
 }: CodeframeHeaderProps) => {
+  const toggleQuestion = (idx: number) => {
+    if (selectedQuestions.includes(idx)) {
+      if (selectedQuestions.length > 1) {
+        onQuestionChange(selectedQuestions.filter(i => i !== idx));
+      }
+    } else {
+      onQuestionChange([...selectedQuestions, idx]);
+    }
+  };
+
+  const selectAll = () => {
+    onQuestionChange(questions.map((_, idx) => idx));
+  };
+
+  const getDisplayText = () => {
+    if (selectedQuestions.length === questions.length) {
+      return "All Questions Selected";
+    }
+    if (selectedQuestions.length === 1) {
+      return `Q${selectedQuestions[0] + 1}: ${questions[selectedQuestions[0]].text}`;
+    }
+    return `${selectedQuestions.length} Questions Selected`;
+  };
+
   return (
     <div className="border-b border-slate-200 bg-white sticky top-0 z-10">
       <div className="container mx-auto px-6 py-4">
@@ -74,21 +103,43 @@ export const CodeframeHeader = ({
 
         {view === "question" && (
           <div className="mt-4 flex items-center justify-between">
-            <Select
-              value={selectedQuestion.toString()}
-              onValueChange={(value) => onQuestionChange(parseInt(value))}
-            >
-              <SelectTrigger className="w-[450px] bg-white border-slate-200 text-slate-700">
-                <SelectValue placeholder="Select a question" />
-              </SelectTrigger>
-              <SelectContent className="bg-white border-slate-200">
-                {questions.map((q, idx) => (
-                  <SelectItem key={q.id} value={idx.toString()} className="text-slate-700">
-                    Q{idx + 1}: {q.text}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" className="w-[450px] justify-between bg-white border-slate-200 text-slate-700">
+                  <span className="truncate">{getDisplayText()}</span>
+                  <ChevronDown className="h-4 w-4 ml-2 shrink-0" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="w-[450px] bg-white border-slate-200 p-2" align="start">
+                <div className="flex items-center justify-between px-2 py-1.5 mb-2">
+                  <span className="text-sm font-medium text-slate-700">Select Questions</span>
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    onClick={selectAll}
+                    className="text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50 h-auto py-1 px-2"
+                  >
+                    Select All
+                  </Button>
+                </div>
+                <div className="space-y-1 max-h-[300px] overflow-y-auto">
+                  {questions.map((q, idx) => (
+                    <div
+                      key={q.id}
+                      className="flex items-center gap-3 px-2 py-2 rounded hover:bg-slate-50 cursor-pointer"
+                      onClick={() => toggleQuestion(idx)}
+                    >
+                      <Checkbox 
+                        checked={selectedQuestions.includes(idx)}
+                        onCheckedChange={() => toggleQuestion(idx)}
+                        className="border-slate-300 data-[state=checked]:bg-emerald-600 data-[state=checked]:border-emerald-600"
+                      />
+                      <span className="text-sm text-slate-700">Q{idx + 1}: {q.text}</span>
+                    </div>
+                  ))}
+                </div>
+              </DropdownMenuContent>
+            </DropdownMenu>
             <Button
               onClick={onRunAnalysis}
               disabled={isAnalyzing}
