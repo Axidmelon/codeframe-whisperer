@@ -6,16 +6,17 @@ import { ResponsesPanel } from "@/components/ResponsesPanel";
 import { ChatPanel } from "@/components/ChatPanel";
 import { questionLevelData, overallCodeframe, Theme } from "@/data/dummyCodeframe";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Settings } from "lucide-react";
+import { Settings, X } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuCheckboxItem,
-  DropdownMenuTrigger,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-} from "@/components/ui/dropdown-menu";
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
 
 export default function CodeframeReview() {
   const [view, setView] = useState<"question" | "overall">("question");
@@ -25,16 +26,29 @@ export default function CodeframeReview() {
   const [selectedResponse, setSelectedResponse] = useState<{ id: string; text: string }>();
   const [isChatCollapsed, setIsChatCollapsed] = useState(true);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [demographicFilters, setDemographicFilters] = useState({
-    age: false,
-    gender: false,
-    location: false,
-    income: false,
+    age: [] as string[],
+    gender: [] as string[],
+    location: [] as string[],
+    income: [] as string[],
   });
   const { toast } = useToast();
 
-  const toggleDemographicFilter = (key: keyof typeof demographicFilters) => {
-    setDemographicFilters(prev => ({ ...prev, [key]: !prev[key] }));
+  const demographicOptions = {
+    age: ["18-24", "25-34", "35-44", "45-54", "55-64", "65+"],
+    gender: ["Male", "Female", "Non-binary", "Other"],
+    location: ["Urban", "Suburban", "Rural"],
+    income: ["<$30k", "$30k-$50k", "$50k-$100k", "$100k+"],
+  };
+
+  const toggleOption = (category: keyof typeof demographicFilters, value: string) => {
+    setDemographicFilters(prev => ({
+      ...prev,
+      [category]: prev[category].includes(value)
+        ? prev[category].filter(v => v !== value)
+        : [...prev[category], value]
+    }));
   };
 
   const handleRunAnalysis = () => {
@@ -136,41 +150,42 @@ export default function CodeframeReview() {
           <div className="border border-slate-200 rounded-lg bg-white shadow-sm overflow-hidden flex flex-col">
             <div className="flex items-center justify-between px-4 py-3 bg-slate-800 shrink-0">
               <h2 className="text-sm font-medium text-white">Themes ({themes.length})</h2>
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
+              <Dialog open={isSettingsOpen} onOpenChange={setIsSettingsOpen}>
+                <DialogTrigger asChild>
                   <button className="p-1 hover:bg-slate-700 rounded transition-colors">
                     <Settings className="h-4 w-4 text-slate-400 hover:text-white" />
                   </button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-48 bg-white">
-                  <DropdownMenuLabel>Demographic Filters</DropdownMenuLabel>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuCheckboxItem
-                    checked={demographicFilters.age}
-                    onCheckedChange={() => toggleDemographicFilter('age')}
-                  >
-                    Age Group
-                  </DropdownMenuCheckboxItem>
-                  <DropdownMenuCheckboxItem
-                    checked={demographicFilters.gender}
-                    onCheckedChange={() => toggleDemographicFilter('gender')}
-                  >
-                    Gender
-                  </DropdownMenuCheckboxItem>
-                  <DropdownMenuCheckboxItem
-                    checked={demographicFilters.location}
-                    onCheckedChange={() => toggleDemographicFilter('location')}
-                  >
-                    Location
-                  </DropdownMenuCheckboxItem>
-                  <DropdownMenuCheckboxItem
-                    checked={demographicFilters.income}
-                    onCheckedChange={() => toggleDemographicFilter('income')}
-                  >
-                    Income Level
-                  </DropdownMenuCheckboxItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
+                </DialogTrigger>
+                <DialogContent className="sm:max-w-md bg-slate-900 border-slate-700 text-white">
+                  <DialogHeader>
+                    <DialogTitle className="text-white">Demographic Filters</DialogTitle>
+                  </DialogHeader>
+                  <div className="space-y-6 py-4">
+                    {(Object.keys(demographicOptions) as Array<keyof typeof demographicOptions>).map((category) => (
+                      <div key={category} className="space-y-3">
+                        <Label className="text-sm font-medium text-slate-300 capitalize">
+                          {category === 'income' ? 'Income Level' : category === 'age' ? 'Age Group' : category}
+                        </Label>
+                        <div className="flex flex-wrap gap-2">
+                          {demographicOptions[category].map((option) => (
+                            <button
+                              key={option}
+                              onClick={() => toggleOption(category, option)}
+                              className={`px-3 py-1.5 rounded-full text-sm transition-colors ${
+                                demographicFilters[category].includes(option)
+                                  ? 'bg-emerald-600 text-white'
+                                  : 'bg-slate-700 text-slate-300 hover:bg-slate-600'
+                              }`}
+                            >
+                              {option}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </DialogContent>
+              </Dialog>
             </div>
             <ScrollArea className="flex-1">
               <div className="p-4 space-y-2">
