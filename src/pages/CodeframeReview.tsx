@@ -238,6 +238,7 @@ export default function CodeframeReview() {
           <div className="h-full">
             <ResponsesPanel
               selectedTheme={selectedTheme}
+              themes={themes}
               onResponseClick={handleResponseClick}
             />
           </div>
