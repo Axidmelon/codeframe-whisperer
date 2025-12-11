@@ -27,6 +27,7 @@ export default function CodeframeReview() {
   const [isChatCollapsed, setIsChatCollapsed] = useState(true);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [questionSelection, setQuestionSelection] = useState<"1" | "2" | "all">("all");
   const [demographicFilters, setDemographicFilters] = useState({
     age: [] as string[],
     gender: [] as string[],
@@ -161,6 +162,31 @@ export default function CodeframeReview() {
                     <DialogTitle className="text-white">Demographic Filters</DialogTitle>
                   </DialogHeader>
                   <div className="space-y-6 py-4">
+                    {/* Question Selection */}
+                    <div className="space-y-3">
+                      <Label className="text-sm font-medium text-slate-300">Questions to Analyze</Label>
+                      <div className="flex flex-wrap gap-2">
+                        {[
+                          { value: "1", label: "1 Question" },
+                          { value: "2", label: "2 Questions" },
+                          { value: "all", label: "All Questions" },
+                        ].map((option) => (
+                          <button
+                            key={option.value}
+                            onClick={() => setQuestionSelection(option.value as "1" | "2" | "all")}
+                            className={`px-3 py-1.5 rounded-full text-sm transition-colors ${
+                              questionSelection === option.value
+                                ? 'bg-emerald-600 text-white'
+                                : 'bg-slate-700 text-slate-300 hover:bg-slate-600'
+                            }`}
+                          >
+                            {option.label}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Demographic Filters */}
                     {(Object.keys(demographicOptions) as Array<keyof typeof demographicOptions>).map((category) => (
                       <div key={category} className="space-y-3">
                         <Label className="text-sm font-medium text-slate-300 capitalize">
