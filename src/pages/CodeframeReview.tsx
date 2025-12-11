@@ -6,8 +6,16 @@ import { ResponsesPanel } from "@/components/ResponsesPanel";
 import { ChatPanel } from "@/components/ChatPanel";
 import { questionLevelData, overallCodeframe, Theme } from "@/data/dummyCodeframe";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { FileText } from "lucide-react";
+import { Settings } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuCheckboxItem,
+  DropdownMenuTrigger,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+} from "@/components/ui/dropdown-menu";
 
 export default function CodeframeReview() {
   const [view, setView] = useState<"question" | "overall">("question");
@@ -17,7 +25,17 @@ export default function CodeframeReview() {
   const [selectedResponse, setSelectedResponse] = useState<{ id: string; text: string }>();
   const [isChatCollapsed, setIsChatCollapsed] = useState(true);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [demographicFilters, setDemographicFilters] = useState({
+    age: false,
+    gender: false,
+    location: false,
+    income: false,
+  });
   const { toast } = useToast();
+
+  const toggleDemographicFilter = (key: keyof typeof demographicFilters) => {
+    setDemographicFilters(prev => ({ ...prev, [key]: !prev[key] }));
+  };
 
   const handleRunAnalysis = () => {
     setIsAnalyzing(true);
@@ -118,7 +136,41 @@ export default function CodeframeReview() {
           <div className="border border-slate-200 rounded-lg bg-white shadow-sm overflow-hidden flex flex-col">
             <div className="flex items-center justify-between px-4 py-3 bg-slate-800 shrink-0">
               <h2 className="text-sm font-medium text-white">Themes ({themes.length})</h2>
-              <FileText className="h-4 w-4 text-slate-400" />
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button className="p-1 hover:bg-slate-700 rounded transition-colors">
+                    <Settings className="h-4 w-4 text-slate-400 hover:text-white" />
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-48 bg-white">
+                  <DropdownMenuLabel>Demographic Filters</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuCheckboxItem
+                    checked={demographicFilters.age}
+                    onCheckedChange={() => toggleDemographicFilter('age')}
+                  >
+                    Age Group
+                  </DropdownMenuCheckboxItem>
+                  <DropdownMenuCheckboxItem
+                    checked={demographicFilters.gender}
+                    onCheckedChange={() => toggleDemographicFilter('gender')}
+                  >
+                    Gender
+                  </DropdownMenuCheckboxItem>
+                  <DropdownMenuCheckboxItem
+                    checked={demographicFilters.location}
+                    onCheckedChange={() => toggleDemographicFilter('location')}
+                  >
+                    Location
+                  </DropdownMenuCheckboxItem>
+                  <DropdownMenuCheckboxItem
+                    checked={demographicFilters.income}
+                    onCheckedChange={() => toggleDemographicFilter('income')}
+                  >
+                    Income Level
+                  </DropdownMenuCheckboxItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
             <ScrollArea className="flex-1">
               <div className="p-4 space-y-2">
