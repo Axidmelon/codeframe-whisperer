@@ -42,11 +42,11 @@ const sentimentConfig: Record<Sentiment, {
 };
 export function ResponsesPanel({
   selectedTheme,
-  themes,
+  themes = [],
   onResponseClick
 }: ResponsesPanelProps) {
   // Calculate theme distribution data
-  const themeDistributionData = themes.map(theme => {
+  const themeDistributionData = (themes || []).map(theme => {
     const responseCount = theme.responses.length;
     return {
       name: theme.name,
