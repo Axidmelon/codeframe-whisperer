@@ -20,7 +20,7 @@ import { Label } from "@/components/ui/label";
 
 export default function CodeframeReview() {
   const [view, setView] = useState<"question" | "overall">("question");
-  const [selectedQuestion, setSelectedQuestion] = useState(0);
+  const [selectedQuestions, setSelectedQuestions] = useState<number[]>([0]);
   const [themes, setThemes] = useState<Theme[]>(questionLevelData[0].themes);
   const [selectedTheme, setSelectedTheme] = useState<Theme | null>(null);
   const [selectedResponse, setSelectedResponse] = useState<{ id: string; text: string }>();
@@ -69,14 +69,16 @@ export default function CodeframeReview() {
     if (newView === "overall") {
       setThemes(overallCodeframe.allThemes);
     } else {
-      setThemes(questionLevelData[selectedQuestion].themes);
+      setThemes(questionLevelData[selectedQuestions[0]].themes);
     }
   };
 
-  const handleQuestionChange = (index: number) => {
-    setSelectedQuestion(index);
+  const handleQuestionChange = (indices: number[]) => {
+    setSelectedQuestions(indices);
     setSelectedTheme(null);
-    setThemes(questionLevelData[index].themes);
+    // Combine themes from all selected questions
+    const combinedThemes = indices.flatMap(idx => questionLevelData[idx].themes);
+    setThemes(combinedThemes);
   };
 
   const handleThemeSelect = (theme: Theme) => {
@@ -132,7 +134,7 @@ export default function CodeframeReview() {
       <CodeframeHeader
         view={view}
         onViewChange={handleViewChange}
-        selectedQuestion={selectedQuestion}
+        selectedQuestions={selectedQuestions}
         onQuestionChange={handleQuestionChange}
         questions={questionLevelData}
         overallStats={{
@@ -244,8 +246,8 @@ export default function CodeframeReview() {
           <div className={`h-full ${isChatCollapsed ? 'w-16' : ''}`}>
             <ChatPanel 
               selectedResponse={selectedResponse}
-              selectedQuestion={view === "question" ? {
-                text: questionLevelData[selectedQuestion].text,
+              selectedQuestion={view === "question" && selectedQuestions.length > 0 ? {
+                text: questionLevelData[selectedQuestions[0]].text,
                 themes: themes.map(t => ({ name: t.name, description: t.description }))
               } : undefined}
               isCollapsed={isChatCollapsed}
