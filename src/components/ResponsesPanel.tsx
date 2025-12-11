@@ -62,7 +62,7 @@ export function ResponsesPanel({
 
   // Calculate sentiment breakdown
   const sentimentCounts = { positive: 0, negative: 0, neutral: 0 };
-  themes.forEach(theme => {
+  (themes || []).forEach(theme => {
     theme.responses.forEach(response => {
       sentimentCounts[response.sentiment]++;
     });
@@ -70,9 +70,9 @@ export function ResponsesPanel({
   const totalSentiment = sentimentCounts.positive + sentimentCounts.negative + sentimentCounts.neutral;
   
   const sentimentData = [
-    { name: "Positive", value: sentimentCounts.positive, color: "hsl(var(--chart-2))" },
-    { name: "Negative", value: sentimentCounts.negative, color: "hsl(var(--chart-1))" },
-    { name: "Neutral", value: sentimentCounts.neutral, color: "hsl(var(--chart-3))" },
+    { name: "Positive", value: sentimentCounts.positive, color: "#10b981", percent: totalSentiment > 0 ? Math.round((sentimentCounts.positive / totalSentiment) * 100) : 0 },
+    { name: "Negative", value: sentimentCounts.negative, color: "#ef4444", percent: totalSentiment > 0 ? Math.round((sentimentCounts.negative / totalSentiment) * 100) : 0 },
+    { name: "Neutral", value: sentimentCounts.neutral, color: "#94a3b8", percent: totalSentiment > 0 ? Math.round((sentimentCounts.neutral / totalSentiment) * 100) : 0 },
   ].filter(item => item.value > 0);
 
   if (!selectedTheme) {
@@ -84,22 +84,22 @@ export function ResponsesPanel({
         </div>
         <ScrollArea className="flex-1">
           <div className="p-4 space-y-6">
-            {/* Theme Distribution Bar Chart */}
+            {/* Theme Distribution Horizontal Bar Chart */}
             <div>
-              <div className="flex items-center gap-2 mb-3">
+              <div className="flex items-center gap-2 mb-4">
                 <BarChart3 className="h-4 w-4 text-slate-500" />
                 <h3 className="text-sm font-medium text-slate-700">Theme Distribution</h3>
               </div>
-              <div className="space-y-3">
-                {themeDistributionWithPercent.map((item, index) => (
+              <div className="space-y-4">
+                {themeDistributionWithPercent.map((item) => (
                   <div key={item.name}>
-                    <div className="flex justify-between items-center mb-1">
-                      <span className="text-xs text-slate-600 truncate max-w-[180px]">{item.name}</span>
-                      <span className="text-xs font-medium text-primary">{item.percent}%</span>
+                    <div className="flex justify-between items-center mb-1.5">
+                      <span className="text-sm text-slate-700 font-medium">{item.name}</span>
+                      <span className="text-sm font-semibold text-primary">{item.percent}%</span>
                     </div>
-                    <div className="w-full bg-slate-100 rounded-full h-2">
+                    <div className="w-full bg-slate-100 rounded h-3">
                       <div 
-                        className="bg-primary h-2 rounded-full transition-all duration-300"
+                        className="bg-primary h-3 rounded transition-all duration-500 ease-out"
                         style={{ width: `${item.percent}%` }}
                       />
                     </div>
@@ -115,36 +115,40 @@ export function ResponsesPanel({
                 <h3 className="text-sm font-medium text-slate-700">Sentiment Breakdown</h3>
               </div>
               <div className="flex flex-col items-center">
-                <div className="w-full h-[140px]">
+                <div className="w-full h-[160px] relative">
                   <ResponsiveContainer width="100%" height="100%">
                     <RechartsPieChart>
                       <Pie
                         data={sentimentData}
                         cx="50%"
-                        cy="100%"
+                        cy="90%"
                         startAngle={180}
                         endAngle={0}
-                        innerRadius={50}
-                        outerRadius={90}
-                        paddingAngle={2}
+                        innerRadius={60}
+                        outerRadius={100}
+                        paddingAngle={3}
                         dataKey="value"
                       >
                         {sentimentData.map((entry, index) => (
-                          <Cell key={`cell-${index}`} fill={entry.color} />
+                          <Cell key={`cell-${index}`} fill={entry.color} stroke="none" />
                         ))}
                       </Pie>
                     </RechartsPieChart>
                   </ResponsiveContainer>
+                  <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 text-center">
+                    <span className="text-2xl font-bold text-slate-800">{totalSentiment}</span>
+                    <p className="text-xs text-slate-500">Responses</p>
+                  </div>
                 </div>
-                <div className="flex justify-center gap-4 mt-2">
+                <div className="flex justify-center gap-6 mt-4">
                   {sentimentData.map((item) => (
-                    <div key={item.name} className="flex items-center gap-1.5">
+                    <div key={item.name} className="flex items-center gap-2">
                       <div 
                         className="w-3 h-3 rounded-full" 
                         style={{ backgroundColor: item.color }}
                       />
-                      <span className="text-xs text-slate-600">
-                        {item.name} ({totalSentiment > 0 ? Math.round((item.value / totalSentiment) * 100) : 0}%)
+                      <span className="text-sm text-slate-600">
+                        {item.name} <span className="font-medium">({item.percent}%)</span>
                       </span>
                     </div>
                   ))}
