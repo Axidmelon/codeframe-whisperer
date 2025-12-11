@@ -1,3 +1,4 @@
+import { useState, useRef } from "react";
 import { FileText, Download, Sparkles, Loader2, ChevronDown } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
@@ -45,8 +46,18 @@ export const CodeframeHeader = ({
     }
   };
 
-  const selectAll = () => {
-    onQuestionChange(questions.map((_, idx) => idx));
+  const previousSelectionRef = useRef<number[]>([0]);
+  const isAllSelected = selectedQuestions.length === questions.length;
+
+  const toggleSelectAll = () => {
+    if (isAllSelected) {
+      // Revert to previous selection
+      onQuestionChange(previousSelectionRef.current);
+    } else {
+      // Store current selection and select all
+      previousSelectionRef.current = selectedQuestions;
+      onQuestionChange(questions.map((_, idx) => idx));
+    }
   };
 
   const getDisplayText = () => {
@@ -116,10 +127,10 @@ export const CodeframeHeader = ({
                   <Button 
                     variant="ghost" 
                     size="sm" 
-                    onClick={selectAll}
+                    onClick={toggleSelectAll}
                     className="text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50 h-auto py-1 px-2"
                   >
-                    Select All
+                    {isAllSelected ? "Revert Selection" : "Select All"}
                   </Button>
                 </div>
                 <div className="space-y-1 max-h-[300px] overflow-y-auto">
