@@ -47,20 +47,22 @@ export function ResponsesPanel({
   onResponseClick,
   showSentiment = true
 }: ResponsesPanelProps) {
-  // Calculate theme distribution data
+  // Calculate theme distribution data with sentiment breakdown
   const themeDistributionData = (themes || []).map(theme => {
-    const responseCount = theme.responses.length;
+    const positive = theme.responses.filter(r => r.sentiment === 'positive').length;
+    const negative = theme.responses.filter(r => r.sentiment === 'negative').length;
+    const neutral = theme.responses.filter(r => r.sentiment === 'neutral').length;
+    const total = theme.responses.length;
     return {
       name: theme.name,
-      value: responseCount,
+      positive,
+      negative,
+      neutral,
+      total,
     };
-  }).sort((a, b) => b.value - a.value);
+  }).sort((a, b) => b.total - a.total);
 
-  const totalResponses = themeDistributionData.reduce((sum, item) => sum + item.value, 0);
-  const themeDistributionWithPercent = themeDistributionData.map(item => ({
-    ...item,
-    percent: totalResponses > 0 ? Math.round((item.value / totalResponses) * 100) : 0,
-  }));
+  const maxResponses = Math.max(...themeDistributionData.map(d => d.total), 1);
 
   // Calculate sentiment breakdown
   const sentimentCounts = { positive: 0, negative: 0, neutral: 0 };
@@ -86,27 +88,61 @@ export function ResponsesPanel({
         </div>
         <ScrollArea className="flex-1">
           <div className="p-4 space-y-6">
-            {/* Theme Distribution Horizontal Bar Chart */}
+            {/* Theme Distribution Horizontal Bar Chart with Sentiment */}
             <div>
               <div className="flex items-center gap-2 mb-4">
                 <BarChart3 className="h-4 w-4 text-slate-500" />
                 <h3 className="text-sm font-medium text-slate-700">Theme Distribution</h3>
               </div>
               <div className="space-y-4">
-                {themeDistributionWithPercent.map((item) => (
-                  <div key={item.name}>
-                    <div className="flex justify-between items-center mb-1.5">
-                      <span className="text-sm text-slate-700 font-medium">{item.name}</span>
-                      <span className="text-sm font-semibold text-primary">{item.percent}%</span>
+                {themeDistributionData.map((item) => {
+                  const positiveWidth = (item.positive / maxResponses) * 100;
+                  const negativeWidth = (item.negative / maxResponses) * 100;
+                  const neutralWidth = (item.neutral / maxResponses) * 100;
+                  return (
+                    <div key={item.name}>
+                      <div className="flex justify-between items-center mb-1.5">
+                        <span className="text-sm text-slate-700 font-medium">{item.name}</span>
+                        <span className="text-sm font-semibold text-slate-800">{item.total} mentions</span>
+                      </div>
+                      <div className="w-full bg-slate-100 rounded h-3 flex overflow-hidden">
+                        {item.positive > 0 && (
+                          <div 
+                            className="h-3 transition-all duration-500 ease-out"
+                            style={{ width: `${positiveWidth}%`, backgroundColor: '#10b981' }}
+                          />
+                        )}
+                        {item.negative > 0 && (
+                          <div 
+                            className="h-3 transition-all duration-500 ease-out"
+                            style={{ width: `${negativeWidth}%`, backgroundColor: '#ef4444' }}
+                          />
+                        )}
+                        {item.neutral > 0 && (
+                          <div 
+                            className="h-3 transition-all duration-500 ease-out"
+                            style={{ width: `${neutralWidth}%`, backgroundColor: '#94a3b8' }}
+                          />
+                        )}
+                      </div>
                     </div>
-                    <div className="w-full bg-slate-100 rounded h-3">
-                      <div 
-                        className="bg-primary h-3 rounded transition-all duration-500 ease-out"
-                        style={{ width: `${item.percent}%` }}
-                      />
-                    </div>
-                  </div>
-                ))}
+                  );
+                })}
+              </div>
+              {/* Legend */}
+              <div className="flex justify-center gap-4 mt-4">
+                <div className="flex items-center gap-1.5">
+                  <div className="w-3 h-3 rounded-full" style={{ backgroundColor: '#10b981' }} />
+                  <span className="text-xs text-slate-600">Positive</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <div className="w-3 h-3 rounded-full" style={{ backgroundColor: '#ef4444' }} />
+                  <span className="text-xs text-slate-600">Negative</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <div className="w-3 h-3 rounded-full" style={{ backgroundColor: '#94a3b8' }} />
+                  <span className="text-xs text-slate-600">Neutral</span>
+                </div>
               </div>
             </div>
 
