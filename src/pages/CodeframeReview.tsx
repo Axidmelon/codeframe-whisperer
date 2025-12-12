@@ -6,7 +6,7 @@ import { ResponsesPanel } from "@/components/ResponsesPanel";
 import { ChatPanel } from "@/components/ChatPanel";
 import { questionLevelData, overallCodeframe, Theme } from "@/data/dummyCodeframe";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Settings, X } from "lucide-react";
+import { Settings, X, Eye, EyeOff } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import {
   Dialog,
@@ -160,9 +160,24 @@ export default function CodeframeReview() {
                 </DialogTrigger>
                 <DialogContent className="sm:max-w-md bg-slate-900 border-slate-700 text-white">
                   <DialogHeader>
-                    <DialogTitle className="text-white">Demographic Filters</DialogTitle>
+                    <DialogTitle className="text-white">Configurations</DialogTitle>
                   </DialogHeader>
                   <div className="space-y-6 py-4">
+                    {/* Sentiment Display Toggle */}
+                    <div className="space-y-3">
+                      <Label className="text-sm font-medium text-slate-300">Display Options</Label>
+                      <button
+                        onClick={() => setShowSentiment(!showSentiment)}
+                        className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-sm transition-colors ${
+                          showSentiment
+                            ? 'bg-emerald-600 text-white'
+                            : 'bg-slate-700 text-slate-300 hover:bg-slate-600'
+                        }`}
+                      >
+                        {showSentiment ? <Eye className="h-4 w-4" /> : <EyeOff className="h-4 w-4" />}
+                        Show Sentiment
+                      </button>
+                    </div>
 
                     {/* Demographic Filters */}
                     {(Object.keys(demographicOptions) as Array<keyof typeof demographicOptions>).map((category) => (
@@ -217,7 +232,6 @@ export default function CodeframeReview() {
               themes={themes}
               onResponseClick={handleResponseClick}
               showSentiment={showSentiment}
-              onToggleSentiment={() => setShowSentiment(!showSentiment)}
             />
           </div>
 
