@@ -96,6 +96,7 @@ export function ResponsesPanel({
               </div>
               <div className="space-y-4">
                 {themeDistributionData.map((item) => {
+                  const totalWidth = (item.total / maxResponses) * 100;
                   const positiveWidth = (item.positive / maxResponses) * 100;
                   const negativeWidth = (item.negative / maxResponses) * 100;
                   const neutralWidth = (item.neutral / maxResponses) * 100;
@@ -106,22 +107,31 @@ export function ResponsesPanel({
                         <span className="text-sm font-semibold text-slate-800">{item.total} mentions</span>
                       </div>
                       <div className="w-full bg-slate-100 rounded h-3 flex overflow-hidden">
-                        {item.positive > 0 && (
+                        {showSentiment ? (
+                          <>
+                            {item.positive > 0 && (
+                              <div 
+                                className="h-3 transition-all duration-500 ease-out"
+                                style={{ width: `${positiveWidth}%`, backgroundColor: '#10b981' }}
+                              />
+                            )}
+                            {item.negative > 0 && (
+                              <div 
+                                className="h-3 transition-all duration-500 ease-out"
+                                style={{ width: `${negativeWidth}%`, backgroundColor: '#ef4444' }}
+                              />
+                            )}
+                            {item.neutral > 0 && (
+                              <div 
+                                className="h-3 transition-all duration-500 ease-out"
+                                style={{ width: `${neutralWidth}%`, backgroundColor: '#94a3b8' }}
+                              />
+                            )}
+                          </>
+                        ) : (
                           <div 
-                            className="h-3 transition-all duration-500 ease-out"
-                            style={{ width: `${positiveWidth}%`, backgroundColor: '#10b981' }}
-                          />
-                        )}
-                        {item.negative > 0 && (
-                          <div 
-                            className="h-3 transition-all duration-500 ease-out"
-                            style={{ width: `${negativeWidth}%`, backgroundColor: '#ef4444' }}
-                          />
-                        )}
-                        {item.neutral > 0 && (
-                          <div 
-                            className="h-3 transition-all duration-500 ease-out"
-                            style={{ width: `${neutralWidth}%`, backgroundColor: '#94a3b8' }}
+                            className="bg-primary h-3 transition-all duration-500 ease-out"
+                            style={{ width: `${totalWidth}%` }}
                           />
                         )}
                       </div>
@@ -129,21 +139,23 @@ export function ResponsesPanel({
                   );
                 })}
               </div>
-              {/* Legend */}
-              <div className="flex justify-center gap-4 mt-4">
-                <div className="flex items-center gap-1.5">
-                  <div className="w-3 h-3 rounded-full" style={{ backgroundColor: '#10b981' }} />
-                  <span className="text-xs text-slate-600">Positive</span>
+              {/* Legend - only show when sentiment is on */}
+              {showSentiment && (
+                <div className="flex justify-center gap-4 mt-4">
+                  <div className="flex items-center gap-1.5">
+                    <div className="w-3 h-3 rounded-full" style={{ backgroundColor: '#10b981' }} />
+                    <span className="text-xs text-slate-600">Positive</span>
+                  </div>
+                  <div className="flex items-center gap-1.5">
+                    <div className="w-3 h-3 rounded-full" style={{ backgroundColor: '#ef4444' }} />
+                    <span className="text-xs text-slate-600">Negative</span>
+                  </div>
+                  <div className="flex items-center gap-1.5">
+                    <div className="w-3 h-3 rounded-full" style={{ backgroundColor: '#94a3b8' }} />
+                    <span className="text-xs text-slate-600">Neutral</span>
+                  </div>
                 </div>
-                <div className="flex items-center gap-1.5">
-                  <div className="w-3 h-3 rounded-full" style={{ backgroundColor: '#ef4444' }} />
-                  <span className="text-xs text-slate-600">Negative</span>
-                </div>
-                <div className="flex items-center gap-1.5">
-                  <div className="w-3 h-3 rounded-full" style={{ backgroundColor: '#94a3b8' }} />
-                  <span className="text-xs text-slate-600">Neutral</span>
-                </div>
-              </div>
+              )}
             </div>
 
             {/* Sentiment Breakdown Half Pie Chart */}
