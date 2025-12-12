@@ -2,8 +2,7 @@ import { Theme, Sentiment } from "@/data/dummyCodeframe";
 import { Card } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Badge } from "@/components/ui/badge";
-import { MessageSquare, ThumbsUp, ThumbsDown, Minus, List, BarChart3, PieChart, Eye, EyeOff } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { MessageSquare, ThumbsUp, ThumbsDown, Minus, List, BarChart3, PieChart } from "lucide-react";
 import { 
   BarChart, 
   Bar, 
@@ -20,7 +19,6 @@ interface ResponsesPanelProps {
   themes: Theme[];
   onResponseClick: (responseId: string, responseText: string) => void;
   showSentiment?: boolean;
-  onToggleSentiment?: () => void;
 }
 const sentimentConfig: Record<Sentiment, {
   icon: typeof ThumbsUp;
@@ -47,8 +45,7 @@ export function ResponsesPanel({
   selectedTheme,
   themes = [],
   onResponseClick,
-  showSentiment = true,
-  onToggleSentiment
+  showSentiment = true
 }: ResponsesPanelProps) {
   // Calculate theme distribution data
   const themeDistributionData = (themes || []).map(theme => {
@@ -168,18 +165,7 @@ export function ResponsesPanel({
   return <Card className="h-full border-slate-200 bg-white shadow-sm overflow-hidden flex flex-col">
       <div className="flex items-center justify-between px-4 py-3 bg-slate-800 shrink-0">
         <h2 className="text-sm font-medium text-white">{selectedTheme.name} ({selectedTheme.responses.length})</h2>
-        <div className="flex items-center gap-2">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={onToggleSentiment}
-            className="h-7 px-2 text-slate-400 hover:text-white hover:bg-slate-700"
-          >
-            {showSentiment ? <Eye className="h-4 w-4" /> : <EyeOff className="h-4 w-4" />}
-            <span className="ml-1 text-xs">Sentiment</span>
-          </Button>
-          <List className="h-4 w-4 text-slate-400" />
-        </div>
+        <List className="h-4 w-4 text-slate-400" />
       </div>
       <div className="p-4 border-b border-slate-100 shrink-0">
         <div className="bg-slate-50 rounded-lg p-3 border border-slate-100">
