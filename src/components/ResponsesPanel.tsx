@@ -2,20 +2,12 @@ import { Theme, Sentiment } from "@/data/dummyCodeframe";
 import { Card } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Badge } from "@/components/ui/badge";
-import { MessageSquare, ThumbsUp, ThumbsDown, Minus, List, BarChart3, PieChart, Circle } from "lucide-react";
+import { MessageSquare, ThumbsUp, ThumbsDown, Minus, List, BarChart3, PieChart } from "lucide-react";
 import { 
-  BarChart, 
-  Bar, 
-  XAxis, 
-  YAxis, 
   ResponsiveContainer, 
   Cell,
   PieChart as RechartsPieChart,
-  Pie,
-  ScatterChart,
-  Scatter,
-  ZAxis,
-  Tooltip
+  Pie
 } from "recharts";
 
 interface ResponsesPanelProps {
@@ -67,16 +59,6 @@ export function ResponsesPanel({
   }).sort((a, b) => b.total - a.total);
 
   const maxResponses = Math.max(...themeDistributionData.map(d => d.total), 1);
-
-  // Bubble chart data - position themes on a grid with bubble size = mentions
-  const bubbleColors = ['#10b981', '#3b82f6', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899', '#14b8a6', '#f97316'];
-  const bubbleChartData = themeDistributionData.map((item, index) => ({
-    x: (index % 4) * 25 + 15 + Math.random() * 10,
-    y: Math.floor(index / 4) * 30 + 20 + Math.random() * 15,
-    z: item.total,
-    name: item.name,
-    color: bubbleColors[index % bubbleColors.length],
-  }));
 
   // Calculate sentiment breakdown
   const sentimentCounts = { positive: 0, negative: 0, neutral: 0 };
@@ -170,50 +152,6 @@ export function ResponsesPanel({
                   </div>
                 </div>
               )}
-            </div>
-
-            {/* Theme Bubble Chart */}
-            <div>
-              <div className="flex items-center gap-2 mb-3">
-                <Circle className="h-4 w-4 text-slate-500" />
-                <h3 className="text-sm font-medium text-slate-700">Theme Bubble Chart</h3>
-              </div>
-              <div className="w-full h-[220px] bg-slate-50 rounded-lg border border-slate-100 p-2">
-                <ResponsiveContainer width="100%" height="100%">
-                  <ScatterChart margin={{ top: 20, right: 20, bottom: 20, left: 20 }}>
-                    <XAxis type="number" dataKey="x" domain={[0, 100]} hide />
-                    <YAxis type="number" dataKey="y" domain={[0, 80]} hide />
-                    <ZAxis type="number" dataKey="z" range={[200, 1500]} />
-                    <Tooltip 
-                      content={({ payload }) => {
-                        if (payload && payload.length > 0) {
-                          const data = payload[0].payload;
-                          return (
-                            <div className="bg-white px-3 py-2 rounded-lg shadow-lg border border-slate-200">
-                              <p className="text-sm font-medium text-slate-800">{data.name}</p>
-                              <p className="text-xs text-slate-600">{data.z} mentions</p>
-                            </div>
-                          );
-                        }
-                        return null;
-                      }}
-                    />
-                    <Scatter data={bubbleChartData}>
-                      {bubbleChartData.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={entry.color} fillOpacity={0.8} />
-                      ))}
-                    </Scatter>
-                  </ScatterChart>
-                </ResponsiveContainer>
-              </div>
-              <div className="flex flex-wrap justify-center gap-3 mt-3">
-                {bubbleChartData.slice(0, 6).map((item, index) => (
-                  <div key={index} className="flex items-center gap-1.5">
-                    <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: item.color }} />
-                    <span className="text-xs text-slate-600">{item.name}</span>
-                  </div>
-                ))}
-              </div>
             </div>
 
             {/* Sentiment Breakdown Half Pie Chart */}
