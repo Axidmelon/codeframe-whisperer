@@ -1,5 +1,16 @@
+// ============= Core Types =============
 export type Sentiment = "positive" | "negative" | "neutral";
+export type DataSourceType = "survey" | "interview" | "focus_group";
 
+// ============= Speaker (for interviews/focus groups) =============
+export interface Speaker {
+  id: string;
+  name: string;
+  role?: "moderator" | "participant";
+  demographics?: Record<string, string>; // age, gender, role, etc.
+}
+
+// ============= Survey Response (original, backward compatible) =============
 export interface Response {
   id: string;
   text: string;
@@ -7,18 +18,56 @@ export interface Response {
   sentiment: Sentiment;
 }
 
+// ============= Excerpt (for interviews/focus groups) =============
+export interface Excerpt {
+  id: string;
+  text: string;
+  fullText?: string; // Full paragraph if truncated
+  codes: string[]; // Support multiple codes
+  sentiment: Sentiment;
+  speaker?: Speaker;
+  timestamp?: string; // "00:14:32" or line number
+  sequenceOrder?: number; // Position in transcript
+  sourceId: string; // Link to parent transcript/interview
+  contextBefore?: string; // Preceding dialogue for context
+  contextAfter?: string; // Following dialogue for context
+}
+
+// ============= Union type for both survey and qualitative data =============
+export type CodedItem = Response | Excerpt;
+
+// ============= Type guard to check if item is an Excerpt =============
+export function isExcerpt(item: CodedItem): item is Excerpt {
+  return 'codes' in item && Array.isArray((item as Excerpt).codes);
+}
+
+// ============= Theme (updated to support both types) =============
 export interface Theme {
   id: string;
   name: string;
   description: string;
   reasoning: string;
-  responses: Response[];
+  responses: Response[]; // Keep for backward compatibility with surveys
+  excerpts?: Excerpt[]; // Optional for qualitative data
 }
 
+// ============= Question (for surveys) =============
 export interface Question {
   id: string;
   text: string;
   themes: Theme[];
+}
+
+// ============= Transcript (for interviews/focus groups) =============
+export interface Transcript {
+  id: string;
+  title: string;
+  type: DataSourceType;
+  speakers: Speaker[];
+  themes: Theme[];
+  duration?: string;
+  date?: string;
+  totalExcerpts?: number;
 }
 
 // Question-level codeframes - specific themes for each question
