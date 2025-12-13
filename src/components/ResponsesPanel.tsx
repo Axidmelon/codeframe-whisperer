@@ -15,6 +15,7 @@ interface ResponsesPanelProps {
   themes: Theme[];
   onResponseClick: (responseId: string, responseText: string) => void;
   showSentiment?: boolean;
+  selectedSentiments?: string[];
 }
 const sentimentConfig: Record<Sentiment, {
   icon: typeof ThumbsUp;
@@ -41,7 +42,8 @@ export function ResponsesPanel({
   selectedTheme,
   themes = [],
   onResponseClick,
-  showSentiment = true
+  showSentiment = false,
+  selectedSentiments = ["positive", "negative", "neutral"]
 }: ResponsesPanelProps) {
   // Calculate theme distribution data with sentiment breakdown
   const themeDistributionData = (themes || []).map(theme => {
@@ -105,19 +107,19 @@ export function ResponsesPanel({
                       <div className="w-full bg-slate-100 rounded h-3 flex overflow-hidden">
                         {showSentiment ? (
                           <>
-                            {item.positive > 0 && (
+                            {item.positive > 0 && selectedSentiments.includes('positive') && (
                               <div 
                                 className="h-3 transition-all duration-500 ease-out"
                                 style={{ width: `${positiveWidth}%`, backgroundColor: '#10b981' }}
                               />
                             )}
-                            {item.negative > 0 && (
+                            {item.negative > 0 && selectedSentiments.includes('negative') && (
                               <div 
                                 className="h-3 transition-all duration-500 ease-out"
                                 style={{ width: `${negativeWidth}%`, backgroundColor: '#ef4444' }}
                               />
                             )}
-                            {item.neutral > 0 && (
+                            {item.neutral > 0 && selectedSentiments.includes('neutral') && (
                               <div 
                                 className="h-3 transition-all duration-500 ease-out"
                                 style={{ width: `${neutralWidth}%`, backgroundColor: '#94a3b8' }}
@@ -138,18 +140,24 @@ export function ResponsesPanel({
               {/* Legend - only show when sentiment is on */}
               {showSentiment && (
                 <div className="flex justify-center gap-4 mt-4">
-                  <div className="flex items-center gap-1.5">
-                    <div className="w-3 h-3 rounded-full" style={{ backgroundColor: '#10b981' }} />
-                    <span className="text-xs text-slate-600">Positive</span>
-                  </div>
-                  <div className="flex items-center gap-1.5">
-                    <div className="w-3 h-3 rounded-full" style={{ backgroundColor: '#ef4444' }} />
-                    <span className="text-xs text-slate-600">Negative</span>
-                  </div>
-                  <div className="flex items-center gap-1.5">
-                    <div className="w-3 h-3 rounded-full" style={{ backgroundColor: '#94a3b8' }} />
-                    <span className="text-xs text-slate-600">Neutral</span>
-                  </div>
+                  {selectedSentiments.includes('positive') && (
+                    <div className="flex items-center gap-1.5">
+                      <div className="w-3 h-3 rounded-full" style={{ backgroundColor: '#10b981' }} />
+                      <span className="text-xs text-slate-600">Positive</span>
+                    </div>
+                  )}
+                  {selectedSentiments.includes('negative') && (
+                    <div className="flex items-center gap-1.5">
+                      <div className="w-3 h-3 rounded-full" style={{ backgroundColor: '#ef4444' }} />
+                      <span className="text-xs text-slate-600">Negative</span>
+                    </div>
+                  )}
+                  {selectedSentiments.includes('neutral') && (
+                    <div className="flex items-center gap-1.5">
+                      <div className="w-3 h-3 rounded-full" style={{ backgroundColor: '#94a3b8' }} />
+                      <span className="text-xs text-slate-600">Neutral</span>
+                    </div>
+                  )}
                 </div>
               )}
             </div>
@@ -218,24 +226,32 @@ export function ResponsesPanel({
       </div>
       <ScrollArea className="flex-1">
         <div className="p-4 space-y-3">
-          {selectedTheme.responses.map(response => {
-          const sentiment = sentimentConfig[response.sentiment];
-          const SentimentIcon = sentiment.icon;
-          return <div key={response.id} onClick={() => onResponseClick(response.id, response.text)} className="p-3 rounded-md border border-slate-200 bg-slate-50 hover:bg-slate-100 cursor-pointer transition-colors">
-                <p className="text-sm text-slate-700 mb-2">{response.text}</p>
-                <div className="flex items-center gap-2">
-                  {showSentiment && (
-                    <Badge variant="outline" className={`text-xs flex items-center gap-1 ${sentiment.className}`}>
-                      <SentimentIcon className="h-3 w-3" />
-                      {sentiment.label}
+          {selectedTheme.responses
+            .filter(response => !showSentiment || selectedSentiments.includes(response.sentiment))
+            .map(response => {
+              const sentiment = sentimentConfig[response.sentiment];
+              const SentimentIcon = sentiment.icon;
+              return (
+                <div 
+                  key={response.id} 
+                  onClick={() => onResponseClick(response.id, response.text)} 
+                  className="p-3 rounded-md border border-slate-200 bg-slate-50 hover:bg-slate-100 cursor-pointer transition-colors"
+                >
+                  <p className="text-sm text-slate-700 mb-2">{response.text}</p>
+                  <div className="flex items-center gap-2">
+                    {showSentiment && selectedSentiments.includes(response.sentiment) && (
+                      <Badge variant="outline" className={`text-xs flex items-center gap-1 ${sentiment.className}`}>
+                        <SentimentIcon className="h-3 w-3" />
+                        {sentiment.label}
+                      </Badge>
+                    )}
+                    <Badge variant="outline" className="text-xs font-mono bg-white text-slate-600 border-slate-200">
+                      {response.code}
                     </Badge>
-                  )}
-                  <Badge variant="outline" className="text-xs font-mono bg-white text-slate-600 border-slate-200">
-                    {response.code}
-                  </Badge>
+                  </div>
                 </div>
-              </div>;
-        })}
+              );
+            })}
         </div>
       </ScrollArea>
     </Card>;
