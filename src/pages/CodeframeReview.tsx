@@ -33,7 +33,8 @@ export default function CodeframeReview() {
     gender: [] as string[],
     location: [] as string[],
   });
-  const [showSentiment, setShowSentiment] = useState(true);
+  const [showSentiment, setShowSentiment] = useState(false);
+  const [selectedSentiments, setSelectedSentiments] = useState<string[]>(["positive", "negative", "neutral"]);
   const { toast } = useToast();
 
   const demographicOptions = {
@@ -177,6 +178,35 @@ export default function CodeframeReview() {
                         {showSentiment ? <Eye className="h-4 w-4" /> : <EyeOff className="h-4 w-4" />}
                         Show Sentiment
                       </button>
+                      
+                      {/* Sentiment Selection - only show when sentiment is enabled */}
+                      {showSentiment && (
+                        <div className="flex flex-wrap gap-2 mt-2 pl-2">
+                          {["positive", "negative", "neutral"].map((sentiment) => (
+                            <button
+                              key={sentiment}
+                              onClick={() => {
+                                setSelectedSentiments(prev => 
+                                  prev.includes(sentiment)
+                                    ? prev.filter(s => s !== sentiment)
+                                    : [...prev, sentiment]
+                                );
+                              }}
+                              className={`px-3 py-1.5 rounded-full text-sm transition-colors capitalize ${
+                                selectedSentiments.includes(sentiment)
+                                  ? sentiment === 'positive' 
+                                    ? 'bg-emerald-600 text-white'
+                                    : sentiment === 'negative'
+                                    ? 'bg-red-500 text-white'
+                                    : 'bg-slate-500 text-white'
+                                  : 'bg-slate-700 text-slate-300 hover:bg-slate-600'
+                              }`}
+                            >
+                              {sentiment}
+                            </button>
+                          ))}
+                        </div>
+                      )}
                     </div>
 
                     {/* Demographic Filters */}
@@ -232,6 +262,7 @@ export default function CodeframeReview() {
               themes={themes}
               onResponseClick={handleResponseClick}
               showSentiment={showSentiment}
+              selectedSentiments={selectedSentiments}
             />
           </div>
 
