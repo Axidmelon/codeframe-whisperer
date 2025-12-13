@@ -51,16 +51,25 @@ export function ResponsesPanel({
     const negative = theme.responses.filter(r => r.sentiment === 'negative').length;
     const neutral = theme.responses.filter(r => r.sentiment === 'neutral').length;
     const total = theme.responses.length;
+    
+    // Calculate filtered total based on selected sentiments when sentiment is enabled
+    const filteredTotal = showSentiment 
+      ? (selectedSentiments.includes('positive') ? positive : 0) +
+        (selectedSentiments.includes('negative') ? negative : 0) +
+        (selectedSentiments.includes('neutral') ? neutral : 0)
+      : total;
+    
     return {
       name: theme.name,
       positive,
       negative,
       neutral,
       total,
+      filteredTotal,
     };
-  }).sort((a, b) => b.total - a.total);
+  }).sort((a, b) => b.filteredTotal - a.filteredTotal);
 
-  const maxResponses = Math.max(...themeDistributionData.map(d => d.total), 1);
+  const maxResponses = Math.max(...themeDistributionData.map(d => d.filteredTotal), 1);
 
   // Calculate sentiment breakdown
   const sentimentCounts = { positive: 0, negative: 0, neutral: 0 };
@@ -69,12 +78,20 @@ export function ResponsesPanel({
       sentimentCounts[response.sentiment]++;
     });
   });
-  const totalSentiment = sentimentCounts.positive + sentimentCounts.negative + sentimentCounts.neutral;
+  
+  // Filter sentiment data based on selected sentiments when sentiment is enabled
+  const filteredSentimentCounts = showSentiment ? {
+    positive: selectedSentiments.includes('positive') ? sentimentCounts.positive : 0,
+    negative: selectedSentiments.includes('negative') ? sentimentCounts.negative : 0,
+    neutral: selectedSentiments.includes('neutral') ? sentimentCounts.neutral : 0,
+  } : sentimentCounts;
+  
+  const totalSentiment = filteredSentimentCounts.positive + filteredSentimentCounts.negative + filteredSentimentCounts.neutral;
   
   const sentimentData = [
-    { name: "Positive", value: sentimentCounts.positive, color: "#10b981", percent: totalSentiment > 0 ? Math.round((sentimentCounts.positive / totalSentiment) * 100) : 0 },
-    { name: "Negative", value: sentimentCounts.negative, color: "#ef4444", percent: totalSentiment > 0 ? Math.round((sentimentCounts.negative / totalSentiment) * 100) : 0 },
-    { name: "Neutral", value: sentimentCounts.neutral, color: "#94a3b8", percent: totalSentiment > 0 ? Math.round((sentimentCounts.neutral / totalSentiment) * 100) : 0 },
+    { name: "Positive", value: filteredSentimentCounts.positive, color: "#10b981", percent: totalSentiment > 0 ? Math.round((filteredSentimentCounts.positive / totalSentiment) * 100) : 0 },
+    { name: "Negative", value: filteredSentimentCounts.negative, color: "#ef4444", percent: totalSentiment > 0 ? Math.round((filteredSentimentCounts.negative / totalSentiment) * 100) : 0 },
+    { name: "Neutral", value: filteredSentimentCounts.neutral, color: "#94a3b8", percent: totalSentiment > 0 ? Math.round((filteredSentimentCounts.neutral / totalSentiment) * 100) : 0 },
   ].filter(item => item.value > 0);
 
   if (!selectedTheme) {
@@ -94,7 +111,7 @@ export function ResponsesPanel({
               </div>
               <div className="space-y-4">
                 {themeDistributionData.map((item) => {
-                  const totalWidth = (item.total / maxResponses) * 100;
+                  const totalWidth = (item.filteredTotal / maxResponses) * 100;
                   const positiveWidth = (item.positive / maxResponses) * 100;
                   const negativeWidth = (item.negative / maxResponses) * 100;
                   const neutralWidth = (item.neutral / maxResponses) * 100;
@@ -102,7 +119,7 @@ export function ResponsesPanel({
                     <div key={item.name}>
                       <div className="flex justify-between items-center mb-1.5">
                         <span className="text-sm text-slate-700 font-medium">{item.name}</span>
-                        <span className="text-sm font-semibold text-slate-800">{item.total} mentions</span>
+                        <span className="text-sm font-semibold text-slate-800">{item.filteredTotal} mentions</span>
                       </div>
                       <div className="w-full bg-slate-100 rounded h-3 flex overflow-hidden">
                         {showSentiment ? (
