@@ -1,5 +1,5 @@
-import { useState, useRef } from "react";
-import { FileText, Download, Sparkles, Loader2, ChevronDown } from "lucide-react";
+import { useRef } from "react";
+import { FileText, Download, ChevronDown } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
@@ -22,8 +22,6 @@ interface CodeframeHeaderProps {
     totalThemes: number;
     totalResponses: number;
   };
-  isAnalyzing?: boolean;
-  onRunAnalysis?: () => void;
 }
 
 export const CodeframeHeader = ({
@@ -33,8 +31,6 @@ export const CodeframeHeader = ({
   onQuestionChange,
   questions,
   overallStats,
-  isAnalyzing = false,
-  onRunAnalysis,
 }: CodeframeHeaderProps) => {
   const toggleQuestion = (idx: number) => {
     if (selectedQuestions.includes(idx)) {
@@ -151,50 +147,14 @@ export const CodeframeHeader = ({
                 </div>
               </DropdownMenuContent>
             </DropdownMenu>
-            <Button
-              onClick={onRunAnalysis}
-              disabled={isAnalyzing}
-              className="bg-emerald-600 hover:bg-emerald-700 text-white"
-            >
-              {isAnalyzing ? (
-                <>
-                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                  Analyzing...
-                </>
-              ) : (
-                <>
-                  <Sparkles className="h-4 w-4 mr-2" />
-                  Run Analysis
-                </>
-              )}
-            </Button>
           </div>
         )}
 
         {view === "overall" && overallStats && (
-          <div className="mt-3 flex items-center justify-between">
-            <div className="flex gap-6 text-sm text-slate-500">
-              <span>Total Questions: {overallStats.totalQuestions}</span>
-              <span>Total Themes: {overallStats.totalThemes}</span>
-              <span>Total Responses: {overallStats.totalResponses}</span>
-            </div>
-            <Button
-              onClick={onRunAnalysis}
-              disabled={isAnalyzing}
-              className="bg-emerald-600 hover:bg-emerald-700 text-white"
-            >
-              {isAnalyzing ? (
-                <>
-                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                  Analyzing...
-                </>
-              ) : (
-                <>
-                  <Sparkles className="h-4 w-4 mr-2" />
-                  Run Analysis
-                </>
-              )}
-            </Button>
+          <div className="mt-3 flex gap-6 text-sm text-slate-500">
+            <span>Total Questions: {overallStats.totalQuestions}</span>
+            <span>Total Themes: {overallStats.totalThemes}</span>
+            <span>Total Responses: {overallStats.totalResponses}</span>
           </div>
         )}
       </div>
