@@ -25,7 +25,7 @@ export default function CodeframeReview() {
   const [selectedTheme, setSelectedTheme] = useState<Theme | null>(null);
   const [selectedResponse, setSelectedResponse] = useState<{ id: string; text: string }>();
   const [isChatCollapsed, setIsChatCollapsed] = useState(true);
-  const [isAnalyzing, setIsAnalyzing] = useState(false);
+  
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [questionSelection, setQuestionSelection] = useState<"1" | "2" | "all">("all");
   const [demographicFilters, setDemographicFilters] = useState({
@@ -52,16 +52,6 @@ export default function CodeframeReview() {
     }));
   };
 
-  const handleRunAnalysis = () => {
-    setIsAnalyzing(true);
-    setTimeout(() => {
-      setIsAnalyzing(false);
-      toast({
-        title: "Analysis Complete",
-        description: `Your codeframe has been finalized with ${themes.length} themes.`,
-      });
-    }, 1500);
-  };
 
   const handleViewChange = (newView: "question" | "overall") => {
     setView(newView);
@@ -142,8 +132,6 @@ export default function CodeframeReview() {
           totalThemes: overallCodeframe.totalThemes,
           totalResponses: overallCodeframe.totalResponses,
         }}
-        isAnalyzing={isAnalyzing}
-        onRunAnalysis={handleRunAnalysis}
       />
 
       {/* Main Content */}
